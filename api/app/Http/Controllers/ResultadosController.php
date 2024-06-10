@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Estadio;
+use App\Models\Resultado;
 use Illuminate\Http\Request;
 
-class EstadiosController extends Controller
+class ResultadosController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $estadios = Estadio::all();
-        return $estadios;
+        $resultados = Resultado::orderBy('puntuacion_ganador')->get();
+        return $resultados;
     }
 
     /**
@@ -35,15 +35,15 @@ class EstadiosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Estadio $estadio)
+    public function show(Resultado $resultado)
     {
-        return $estadio;
+        return $resultado;
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Estadio $estadio)
+    public function edit(Resultado $resultado)
     {
         //
     }
@@ -51,7 +51,7 @@ class EstadiosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Estadio $estadio)
+    public function update(Request $request, Resultado $resultado)
     {
         //
     }
@@ -59,7 +59,7 @@ class EstadiosController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Estadio $estadio)
+    public function destroy(Resultado $resultado)
     {
         //
     }

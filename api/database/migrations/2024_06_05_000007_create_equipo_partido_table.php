@@ -14,8 +14,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('equipo_id');
             $table->unsignedBigInteger('partido_id');
             $table->primary(['equipo_id', 'partido_id']);
-            $table->tinyInteger('goles')->default(0);
-            $table->boolean('es_local')->default(false);
+            $table->boolean('es_ganador');
 
             $table->foreign('equipo_id')->references('id')->on('equipos');
             $table->foreign('partido_id')->references('id')->on('partidos');

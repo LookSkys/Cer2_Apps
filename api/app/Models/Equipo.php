@@ -10,21 +10,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Equipo extends Model
 {
     use HasFactory;
-    protected $table = 'equipos';
+    protected $table = "equipos";
+
+    protected $fillable = ['nombre', 'entrenador', 'juegos_en_donde_participa'];
+
+    protected $casts = [
+        'juegos_en_donde_participa' => 'array', // Esto convierte el JSON en un array automáticamente
+    ];
     public $timestamps = false;
 
     public function jugadores(): HasMany
     {
-        return $this->HasMany(Jugador::class);
+        return $this->hasMany(Jugador::class);
     }
-
     public function partidos(): BelongsToMany
     {
-        return $this->belongsToMany(Partido::class);
+        return $this->BelongsToMany(Partido::class);
     }
 
     public function campeonatos(): BelongsToMany
     {
-        return $this->belongsToMany(Campeonato::class);
+        return $this->BelongsToMany(Campeonato::class);
     }
 }

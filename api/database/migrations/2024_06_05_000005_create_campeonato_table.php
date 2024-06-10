@@ -10,10 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('equipos', function (Blueprint $table) {
+        Schema::create('campeonato', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->nullable(false);
-            $table->string('entrenador')->nullable(false);
+            $table->string('nombre', 50);
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->string('reglas', 300);
+            $table->string('premios', 100);
             //$table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('equipos');
+        Schema::dropIfExists('campeonato');
     }
 };

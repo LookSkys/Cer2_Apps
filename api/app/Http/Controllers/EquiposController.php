@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Equipo;
 use Illuminate\Http\Request;
 
-class EquiposController extends Controller
+class EquiposController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $equipos = Equipo::all();
+        $equipos = Equipo::orderBy('nombre')->get();
         return $equipos;
     }
 

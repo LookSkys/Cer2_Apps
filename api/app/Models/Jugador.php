@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Jugador extends Model
 {
     use HasFactory;
-    protected $table = 'jugadores';
-    protected $primaryKey = 'rut';
+    protected $table = "jugadores";
+    protected $primary = 'rut';
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;

@@ -10,13 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('campeonato', function (Blueprint $table) {
+        Schema::create('partidos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
-            $table->string('reglas');
-            $table->string('premios');
+            $table->date('fecha');
+            $table->boolean('jugado')->default(false);
+            $table->string('lugar', 50)->nullable(false);
+            $table->unsignedBigInteger('campeonato_id')->nullable(false);
+
+            $table->foreign('campeonato_id')->references('id')->on('campeonato');
             //$table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('campeonato');
+        Schema::dropIfExists('partidos');
     }
 };

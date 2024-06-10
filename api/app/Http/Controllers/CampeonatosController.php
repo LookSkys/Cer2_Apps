@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Campeonato;
 use Illuminate\Http\Request;
 
-class CampeonatosController extends Controller
+class CampeonatosController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $campeonatos = Campeonato::all();
+        $campeonatos = Campeonato::orderBy('nombre')->get();
         return $campeonatos;
     }
 
@@ -37,7 +37,7 @@ class CampeonatosController extends Controller
      */
     public function show(Campeonato $campeonato)
     {
-        //
+        return $campeonato;
     }
 
     /**

@@ -11,13 +11,12 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('campeonato_equipo', function (Blueprint $table) {
-            $table->unsignedBigInteger('equipo_id');
             $table->unsignedBigInteger('campeonato_id');
-            $table->primary(['equipo_id', 'campeonato_id']);
+            $table->unsignedBigInteger('equipo_id');
+            $table->primary(['campeonato_id', 'equipo_id']);
 
-            $table->foreign('equipo_id')->references('id')->on('equipos');
             $table->foreign('campeonato_id')->references('id')->on('campeonato');
-
+            $table->foreign('equipo_id')->references('id')->on('equipos');
             //$table->timestamps();
         });
     }

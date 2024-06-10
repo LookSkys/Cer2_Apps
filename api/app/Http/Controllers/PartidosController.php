@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Partido;
 use Illuminate\Http\Request;
 
-class PartidosController extends Controller
+class PartidosController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $partidos = Partido::all();
+        $partidos = Partido::orderBy('lugar')->get();
         return $partidos;
     }
 

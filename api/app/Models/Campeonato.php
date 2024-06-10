@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Campeonato extends Model
 {
     use HasFactory;
-    protected $table = 'campeonato';
+    protected $table = "campeonato";
     public $timestamps = false;
 
     public function equipos(): BelongsToMany

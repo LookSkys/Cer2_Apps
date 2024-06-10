@@ -12,11 +12,9 @@ return new class extends Migration {
     {
         Schema::create('jugadores', function (Blueprint $table) {
             $table->string('rut', 10)->primary();
-            $table->string('nombre', 20);
-            $table->string('apellido', 20);
-            $table->tinyInteger('num_camiseta');
-            $table->string('posicion', 20);
-            $table->unsignedBigInteger('equipo_id');
+            $table->string('nombre', 20)->nullable(false);
+            $table->string('apellido', 20)->nullable(false);
+            $table->unsignedBigInteger('equipo_id')->nullable(false);
 
             $table->foreign('equipo_id')->references('id')->on('equipos');
             //$table->timestamps();

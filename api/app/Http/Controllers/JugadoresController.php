@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Jugador;
 use Illuminate\Http\Request;
 
-class JugadoresController extends Controller
+class JugadoresController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $jugadores = Jugador::all();
+        $jugadores = Jugador::orderBy('nombre')->get();
         return $jugadores;
     }
 

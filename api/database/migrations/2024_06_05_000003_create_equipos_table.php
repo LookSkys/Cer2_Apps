@@ -10,12 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('partidos', function (Blueprint $table) {
+        Schema::create('equipos', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha')->nullable(false);
-            $table->boolean('jugado')->default(false);
-            $table->unsignedBigInteger('estadio_id')->nullable(false);
-            $table->foreign('estadio_id')->references('id')->on('estadios');
+            $table->string('nombre', 20)->nullable(false);
+            $table->string('entrenador', 20)->nullable(false);
+            $table->json('juegos_en_donde_participa')->nullable(false);
             //$table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('partidos');
+        Schema::dropIfExists('equipos');
     }
 };

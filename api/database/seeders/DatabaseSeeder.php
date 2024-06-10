@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             EquiposSeeder::class,
             JugadoresSeeder::class,
-            EstadiosSeeder::class,
-            PartidosSeeder::class,
             CampeonatosSeeder::class,
+            PartidosSeeder::class,
+            ResultadosSeeder::class,
         ]);
     }
 }
