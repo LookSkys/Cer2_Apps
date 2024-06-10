@@ -8,7 +8,7 @@ class CompesTab extends StatefulWidget {
 }
 
 class _CompesTabState extends State<CompesTab> {
-  final AssetImage fondo = AssetImage('assets/images/fondo1.jpg');
+  final AssetImage fondo = AssetImage('assets/images/fondo_compes.jpg');
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,7 @@
+import 'package:aplicacion/screens/tabs/calendario_tab.dart';
 import 'package:aplicacion/screens/tabs/compes_tab.dart';
+import 'package:aplicacion/screens/tabs/equipos_tab.dart';
+import 'package:aplicacion/screens/tabs/resultados_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
@@ -38,16 +41,16 @@ class HomeScreen extends StatelessWidget {
                 Tab(
                   text: 'Resultados',
                   icon: Icon(MdiIcons.trophy),
-                ),                
+                ),
               ],
             ),
           ),
           body: TabBarView(
             children: [
               CompesTab(),
-              CompesTab(),
-              CompesTab(),
-              CompesTab(),
+              EquiposTab(),
+              CalendarioTab(),
+              ResultadosTab(),
             ],
           ),
         ),
