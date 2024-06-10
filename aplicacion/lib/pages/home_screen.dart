@@ -10,7 +10,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle estilo_titulo = TextStyle(fontSize: 25,fontWeight: FontWeight.bold ,color: Colors.white);
+    TextStyle estilo_titulo = TextStyle(
+        fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white);
     return Center(
       child: DefaultTabController(
         length: 4,
@@ -18,14 +19,13 @@ class HomeScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text('Esport Tournament 🎮', style: estilo_titulo),
             backgroundColor: Colors.black,
-            bottom:
-             TabBar(
+            bottom: TabBar(
               //hace scrolleable el tabBar
               //isScrollable: true,
               //estilo de las tabs
               labelStyle: TextStyle(color: Colors.purple),
               unselectedLabelStyle: TextStyle(color: Colors.grey),
-              tabs: [               
+              tabs: [
                 Tab(
                   text: 'Competiciones',
                   icon: Icon(MdiIcons.tournament),
