@@ -1,7 +1,7 @@
-import 'package:aplicacion/screens/tabs/calendario_tab.dart';
-import 'package:aplicacion/screens/tabs/compes_tab.dart';
-import 'package:aplicacion/screens/tabs/equipos_tab.dart';
-import 'package:aplicacion/screens/tabs/resultados_tab.dart';
+import 'package:aplicacion/pages/tabs/calendario_tab.dart';
+import 'package:aplicacion/pages/tabs/compes_tab.dart';
+import 'package:aplicacion/pages/tabs/equipos_tab.dart';
+import 'package:aplicacion/pages/tabs/resultados_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
               //hace scrolleable el tabBar
               //isScrollable: true,
               //estilo de las tabs
-              labelStyle: TextStyle(color: Colors.yellow[600]),
+              labelStyle: TextStyle(color: Colors.purple),
               unselectedLabelStyle: TextStyle(color: Colors.grey),
               tabs: [               
                 Tab(
