@@ -1,4 +1,7 @@
-import 'package:aplicacion/screens/tabs/compes_tab.dart';
+import 'package:aplicacion/pages/tabs/calendario_tab.dart';
+import 'package:aplicacion/pages/tabs/compes_tab.dart';
+import 'package:aplicacion/pages/tabs/equipos_tab.dart';
+import 'package:aplicacion/pages/tabs/resultados_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 
@@ -13,14 +16,14 @@ class HomeScreen extends StatelessWidget {
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Esport Tournament', style: estilo_titulo),
+            title: Text('Esport Tournament 🎮', style: estilo_titulo),
             backgroundColor: Colors.black,
             bottom:
              TabBar(
               //hace scrolleable el tabBar
               //isScrollable: true,
               //estilo de las tabs
-              labelStyle: TextStyle(color: Colors.yellow[600]),
+              labelStyle: TextStyle(color: Colors.purple),
               unselectedLabelStyle: TextStyle(color: Colors.grey),
               tabs: [               
                 Tab(
@@ -33,21 +36,21 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Tab(
                   text: 'Calendario',
-                  icon: Icon(Icons.schedule),
+                  icon: Icon(Icons.calendar_month),
                 ),
                 Tab(
                   text: 'Resultados',
                   icon: Icon(MdiIcons.trophy),
-                ),                
+                ),
               ],
             ),
           ),
           body: TabBarView(
             children: [
-              TabCompesScreen(),
-              TabCompesScreen(),
-              TabCompesScreen(),
-              TabCompesScreen(),
+              CompesTab(),
+              EquiposTab(),
+              CalendarioTab(),
+              ResultadosTab(),
             ],
           ),
         ),
