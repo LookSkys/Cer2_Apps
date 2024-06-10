@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Esport Tournament', style: estilo_titulo),
+            title: Text('Esport Tournament 🎮', style: estilo_titulo),
             backgroundColor: Colors.black,
             bottom:
              TabBar(
@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Tab(
                   text: 'Calendario',
-                  icon: Icon(Icons.schedule),
+                  icon: Icon(Icons.calendar_month),
                 ),
                 Tab(
                   text: 'Resultados',
@@ -44,10 +44,10 @@ class HomeScreen extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              TabCompesScreen(),
-              TabCompesScreen(),
-              TabCompesScreen(),
-              TabCompesScreen(),
+              CompesTab(),
+              CompesTab(),
+              CompesTab(),
+              CompesTab(),
             ],
           ),
         ),
