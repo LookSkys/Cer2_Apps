@@ -1,4 +1,5 @@
 import 'package:aplicacion/pages/home_screen.dart';
+import 'package:aplicacion/pages/tabs/compe_detalles.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
       //home: const HomePage(),
       routes: {
         '/': (context) => HomeScreen(),
+        'CompeDetalles': (context) => CompeDetalles(),
       },
       initialRoute: '/',
     );

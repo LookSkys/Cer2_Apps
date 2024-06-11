@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
               //hace scrolleable el tabBar
               //isScrollable: true,
               //estilo de las tabs
-              labelStyle: TextStyle(color: Colors.purple),
+              labelStyle: TextStyle(color: Colors.teal),
               unselectedLabelStyle: TextStyle(color: Colors.grey),
               tabs: [
                 Tab(

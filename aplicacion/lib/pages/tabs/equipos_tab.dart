@@ -29,6 +29,7 @@ class _EquiposTabState extends State<EquiposTab> {
       print('Error al cargar equipos: $e');
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -45,16 +46,25 @@ class _EquiposTabState extends State<EquiposTab> {
               margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.white
-                    .withOpacity(0.3), // Fondo blanco semitransparente
+                color: Colors.black
+                    .withOpacity(0.9), // Fondo blanco semitransparente
                 borderRadius: BorderRadius.circular(10.0),
+                border: Border.all(
+                  color: Colors.teal,
+                  width: 2.0,
+                )
               ),
               child: ListTile(
-                title: Text(
-                  equipos[index]['nombre'],
-                  style: TextStyle(color: Colors.white),
+                leading: CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/equipo_icono.png'),
                 ),
-                subtitle: Text(equipos[index]['entrenador']),
+                title: Text(
+                  '⚪ ' + equipos[index]['nombre'],
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                subtitle: Text('Entrenador: ' + equipos[index]['entrenador'],
+                style: TextStyle(color: Colors.white),)
+                ,
                 // Agrega más información según tu API
                 onTap: () {
                   // Acciones al hacer tap en un equipo si es necesario
