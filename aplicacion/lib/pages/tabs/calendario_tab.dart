@@ -56,7 +56,8 @@ class _CalendarioTabState extends State<CalendarioTab> {
               ),
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/equipo_icono.png'),
+                  backgroundImage: AssetImage('assets/images/partido_icono.png'),
+                  backgroundColor: Colors.black,
                 ),
                 title: Text(
                   '⚪ ' + partidos[index]['fecha'],

@@ -57,6 +57,7 @@ class _EquiposTabState extends State<EquiposTab> {
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundImage: AssetImage('assets/images/equipo_icono.png'),
+                  backgroundColor: Colors.black,                  
                 ),
                 title: Text(
                   '⚪ ' + equipos[index]['nombre'],

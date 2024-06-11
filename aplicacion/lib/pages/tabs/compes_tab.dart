@@ -57,7 +57,8 @@ class _CompesTabState extends State<CompesTab> {
               ),
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/equipo_icono.png'),
+                  backgroundImage: AssetImage('assets/images/compes_icono.png'),
+                  backgroundColor: Colors.black,
                 ),
                 title: Text(
                   '⚪ ' + campeonatos[index]['nombre'],

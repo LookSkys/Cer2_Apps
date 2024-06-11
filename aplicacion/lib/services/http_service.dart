@@ -17,8 +17,12 @@ class HttpService {
     return listarDatos('campeonatos');
   }
 
-    Future<List<dynamic>> partidos() async {
+  Future<List<dynamic>> partidos() async {
     return listarDatos('partidos');
+  }
+
+  Future<List<dynamic>> resultados() async {
+    return listarDatos('resultados');
   }
 
   Future<List<dynamic>> listarDatos(String coleccion) async {
