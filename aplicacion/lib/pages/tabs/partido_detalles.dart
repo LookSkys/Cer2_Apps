@@ -7,7 +7,7 @@ class PartidoDetalles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle estilo_seccion = TextStyle(
-      fontSize: 19,
+      fontSize: 40,
       fontWeight: FontWeight.bold,
       color: Colors.white);
 
@@ -15,8 +15,8 @@ class PartidoDetalles extends StatelessWidget {
         TextStyle(fontSize: 17, color: Colors.white);
 
     return Scaffold(
-      backgroundColor: Colors.purple[900],
-      appBar: AppbarSeccion(nombre_appbar: '📆  Partido'),
+      backgroundColor: Colors.black,
+      appBar: AppbarSeccion(nombre_appbar: '⚔️  Campeonato'),
       body: 
       Container(        
         height: 250,
@@ -24,8 +24,8 @@ class PartidoDetalles extends StatelessWidget {
         margin: EdgeInsets.only(top: 100),
         padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.purple, width: 7),
-          borderRadius: BorderRadius.all(Radius.circular(5))
+          border: Border.all(color: Colors.teal, width: 7),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
         ),
         child: Column(
           children: [
