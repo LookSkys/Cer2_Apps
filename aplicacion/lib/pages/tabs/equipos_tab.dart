@@ -1,3 +1,4 @@
+import 'package:aplicacion/pages/tabs/equipo_detalles.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicacion/services/http_service.dart';
 
@@ -69,6 +70,8 @@ class _EquiposTabState extends State<EquiposTab> {
                 // Agrega más información según tu API
                 onTap: () {
                   // Acciones al hacer tap en un equipo si es necesario
+                   Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EquipoDetalles()));
                 },
               ),
             );

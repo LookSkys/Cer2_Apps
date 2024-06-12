@@ -1,8 +1,8 @@
 import 'package:aplicacion/widgets/appBar_seccion.dart';
 import 'package:flutter/material.dart';
 
-class CompeDetalles extends StatelessWidget {
-  const CompeDetalles({super.key});
+class PartidoDetalles extends StatelessWidget {
+  const PartidoDetalles({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class CompeDetalles extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.purple[900],
-      appBar: AppbarSeccion(nombre_appbar: '⚔️  Campeonato'),
+      appBar: AppbarSeccion(nombre_appbar: '📆  Partido'),
       body: 
       Container(        
         height: 250,
@@ -80,7 +80,7 @@ class CompeDetalles extends StatelessWidget {
             ),
           ],
         ),
-      )  
+      )        
     );
   }
 }
