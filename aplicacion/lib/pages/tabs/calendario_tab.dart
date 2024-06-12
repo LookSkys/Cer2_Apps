@@ -60,7 +60,7 @@ class _CalendarioTabState extends State<CalendarioTab> {
                   backgroundColor: Colors.black,
                 ),
                 title: Text(
-                  '⚪ ' + partidos[index]['fecha'],
+                  '💠 ' + partidos[index]['fecha'],
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 subtitle: Text('Lugar: ' + partidos[index]['lugar'],

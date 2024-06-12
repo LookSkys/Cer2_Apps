@@ -61,7 +61,7 @@ class _CompesTabState extends State<CompesTab> {
                   backgroundColor: Colors.black,
                 ),
                 title: Text(
-                  '⚪ ' + campeonatos[index]['nombre'],
+                  '💠 ' + campeonatos[index]['nombre'],
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 subtitle: Text('Fecha: ' + campeonatos[index]['fecha_inicio'],

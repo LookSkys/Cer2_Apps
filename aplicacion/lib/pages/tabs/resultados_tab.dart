@@ -60,10 +60,10 @@ class _ResultadosTabState extends State<ResultadosTab> {
                   backgroundColor: Colors.black,
                 ),
                 title: Text(
-                  '⚪ ' + resultados[index]['equipo_ganador_id'].toString(),
+                  '💠 Ganador ' + resultados[index]['equipo_ganador_id'].toString(),
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
-                subtitle: Text('Entrenador: ' + resultados[index]['equipo_perdedor_id'].toString(),
+                subtitle: Text('Perdedor ' + resultados[index]['equipo_perdedor_id'].toString(),
                 style: TextStyle(color: Colors.white),)
                 ,
                 // Agrega más información según tu API

@@ -60,7 +60,7 @@ class _EquiposTabState extends State<EquiposTab> {
                   backgroundColor: Colors.black,                  
                 ),
                 title: Text(
-                  '⚪ ' + equipos[index]['nombre'],
+                  '💠 ' + equipos[index]['nombre'],
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 subtitle: Text('Entrenador: ' + equipos[index]['entrenador'],

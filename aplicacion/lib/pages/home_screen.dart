@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Esport Tournament 🎮', style: estilo_titulo),
+            title: Text('Esport Tournament 🎮®', style: estilo_titulo),
             backgroundColor: Colors.black,
             bottom: TabBar(
               //hace scrolleable el tabBar
