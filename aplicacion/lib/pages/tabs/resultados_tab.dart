@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aplicacion/services/http_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ResultadosTab extends StatefulWidget {
   const ResultadosTab({Key? key}) : super(key: key);
@@ -10,14 +11,16 @@ class ResultadosTab extends StatefulWidget {
 
 class _ResultadosTabState extends State<ResultadosTab> {
   final AssetImage fondo = AssetImage('assets/images/fondo_equipo.jpg');
-  final HttpService httpService = HttpService(); // Instancia de tu HttpService
+  final HttpService httpService = HttpService();
   List<dynamic> resultados = [];
-  List<dynamic> equipos = []; // Lista para almacenar los equipos
+  List<dynamic> equipos = [];
+
+  late Future<void> _cargarResultadosFuture;
 
   @override
   void initState() {
     super.initState();
-    cargarResultados(); // Cargar resultados y equipos al inicializar la página
+    _cargarResultadosFuture = cargarResultados();
   }
 
   Future<void> cargarResultados() async {
@@ -34,64 +37,91 @@ class _ResultadosTabState extends State<ResultadosTab> {
   }
 
   String obtenerNombreEquipo(int id) {
-    final equipo =
-        equipos.firstWhere((equipo) => equipo['id'] == id, orElse: () => null);
+    final equipo = equipos.firstWhere((equipo) => equipo['id'] == id, orElse: () => null);
     return equipo != null ? equipo['nombre'] : 'Desconocido';
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(image: fondo, fit: BoxFit.cover),
-        ),
-        child: ListView.builder(
-          itemCount: resultados.length,
-          itemBuilder: (context, index) {
-            final resultado = resultados[index];
-            final nombreGanador =
-                obtenerNombreEquipo(resultado['equipo_ganador_id']);
-            final nombrePerdedor =
-                obtenerNombreEquipo(resultado['equipo_perdedor_id']);
+    // Estilos para texto
+    TextStyle estilo_nombre = GoogleFonts.oswald(
+      textStyle: TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+    TextStyle estilo_seccion = GoogleFonts.oswald(
+      textStyle: TextStyle(
+        fontSize: 19,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+    TextStyle estilo_dato = GoogleFonts.oswald(
+      textStyle: TextStyle(
+        fontSize: 17,
+        color: Colors.white,
+      ),
+    );
 
+    return Scaffold(
+      body: FutureBuilder<void>(
+        future: _cargarResultadosFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
-              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              padding: EdgeInsets.all(16.0),
+              color: Colors.black,
+              child: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error al cargar datos: ${snapshot.error}'));
+          } else {
+            return Container(
               decoration: BoxDecoration(
-                color: Colors.black
-                    .withOpacity(0.9), // Fondo negro semitransparente
-                borderRadius: BorderRadius.circular(10.0),
-                border: Border.all(
-                  color: Colors.teal,
-                  width: 2.0,
-                ),
+                image: DecorationImage(image: fondo, fit: BoxFit.cover),
               ),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage:
-                      AssetImage('assets/images/resultado_icono.png'),
-                  backgroundColor: Colors.black,
-                ),
-                title: Text(
-                  '💠 Ganador: $nombreGanador',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                subtitle: Text(
-                  'Perdedor: $nombrePerdedor',
-                  style: TextStyle(color: Colors.white),
-                ),
-                // Agrega más información según tu API
-                onTap: () {
-                  // Acciones al hacer tap en un equipo si es necesario
+              child: ListView.builder(
+                itemCount: resultados.length,
+                itemBuilder: (context, index) {
+                  final resultado = resultados[index];
+                  final nombreGanador = obtenerNombreEquipo(resultado['equipo_ganador_id']);
+                  final nombrePerdedor = obtenerNombreEquipo(resultado['equipo_perdedor_id']);
+
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                        color: Colors.teal,
+                        width: 2.0,
+                      ),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/images/resultado_icono.png'),
+                        backgroundColor: Colors.black,
+                      ),
+                      title: Text(
+                        '🏆 Ganador: $nombreGanador',
+                        style: estilo_seccion,
+                      ),
+                      subtitle: Text(
+                        '❌ Perdedor: $nombrePerdedor',
+                        style: estilo_seccion,
+                      ),
+                      onTap: () {
+                        // Acciones al hacer tap en un resultado si es necesario
+                      },
+                    ),
+                  );
                 },
               ),
             );
-          },
-        ),
+          }
+        },
       ),
     );
   }

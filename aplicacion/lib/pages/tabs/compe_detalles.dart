@@ -1,5 +1,6 @@
 import 'package:aplicacion/widgets/appBar_seccion.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CompeDetalles extends StatelessWidget {
   final dynamic campeonato;
@@ -13,13 +14,29 @@ class CompeDetalles extends StatelessWidget {
   Widget build(BuildContext context) {
     // Obtiene el ancho de la pantalla
     final double screenWidth = MediaQuery.of(context).size.width;
+    //Estilos para texto
+        TextStyle estilo_nombre = GoogleFonts.oswald(textStyle:  TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+        color: Colors.white));
+    TextStyle estilo_seccion = GoogleFonts.oswald(textStyle:  TextStyle(
+        fontSize: 19,
+        fontWeight: FontWeight.bold,
+        color: Colors.white));
+    TextStyle estilo_dato =
+        GoogleFonts.oswald(textStyle:  TextStyle(fontSize: 17, color: Colors.white));
 
+        
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppbarSeccion(nombre_appbar: 'Detalle Campeonato ⚔️'),
       body: Container(
-        color: Colors.black, // Fondo negro
+          decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage('assets/images/fondo_detalles.jpeg'), fit: BoxFit.cover),
+        ),
         padding: const EdgeInsets.all(16.0),
+        width: double.infinity,
+        height: double.infinity,
         child: SingleChildScrollView(
           child: Container(
             width: screenWidth, // Establece el ancho del container
@@ -31,34 +48,27 @@ class CompeDetalles extends StatelessWidget {
                 width: 2.0,
               ),
             ),
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(35.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   '${campeonato['nombre']}',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                  style: estilo_nombre),
+                SizedBox(height: 15),
+                Text(
+                  '- Fecha de Inicio: ${campeonato['fecha_inicio']}',
+                  style: estilo_dato,
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Fecha de Inicio: ${campeonato['fecha_inicio']}',
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Fecha de Fin: ${campeonato['fecha_fin']}',
-                  style: TextStyle(color: Colors.white),
+                  '- Fecha de Fin: ${campeonato['fecha_fin']}',
+                  style: estilo_dato,
                 ),
                 SizedBox(height: 20),
                 Text(
                   'Equipos Participantes:',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                  style: estilo_seccion
                 ),
                 ...nombresEquipos
                     .map((nombre) => Text(
@@ -68,11 +78,8 @@ class CompeDetalles extends StatelessWidget {
                     .toList(),
                 if (nombresEquipos.isEmpty)
                   Text(
-                    'No hay equipos participantes disponibles',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
+                    '❌ No hay equipos participantes aún',
+                    style: estilo_dato
                   ),
               ],
             ),

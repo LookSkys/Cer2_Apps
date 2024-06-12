@@ -1,6 +1,7 @@
-import 'package:aplicacion/pages/tabs/compe_detalles.dart';
 import 'package:flutter/material.dart';
+import 'package:aplicacion/pages/tabs/compe_detalles.dart';
 import 'package:aplicacion/services/http_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CompesTab extends StatefulWidget {
   const CompesTab({Key? key}) : super(key: key);
@@ -9,17 +10,19 @@ class CompesTab extends StatefulWidget {
   _CompesTabState createState() => _CompesTabState();
 }
 
-class _CompesTabState extends State<CompesTab> {
+class _CompesTabState extends State<CompesTab> with SingleTickerProviderStateMixin {
   final AssetImage fondo = AssetImage('assets/images/fondo_equipo.jpg');
   final HttpService httpService = HttpService();
   List<dynamic> campeonatos = [];
   List<dynamic> equipos = [];
   List<dynamic> campeonatoEquipo = [];
 
+  late Future<void> _cargarDatosFuture;
+
   @override
   void initState() {
     super.initState();
-    cargarDatos();
+    _cargarDatosFuture = cargarDatos();
   }
 
   Future<void> cargarDatos() async {
@@ -28,8 +31,7 @@ class _CompesTabState extends State<CompesTab> {
       print('Campeonatos cargados: $listaCampeonatos');
       List<dynamic> listaEquipos = await httpService.equipos();
       print('Equipos cargados: $listaEquipos');
-      List<dynamic> listaCampeonatoEquipo =
-          await httpService.campeonatoEquipo();
+      List<dynamic> listaCampeonatoEquipo = await httpService.campeonatoEquipo();
       print('Campeonato-Equipo relaciones cargadas: $listaCampeonatoEquipo');
       setState(() {
         campeonatos = listaCampeonatos;
@@ -53,69 +55,100 @@ class _CompesTabState extends State<CompesTab> {
         .where((equipo) => idsEquipos.contains(equipo['id']))
         .map<String>((equipo) => equipo['nombre'])
         .toList();
-    print(
-        'Nombres de equipos para el campeonato $campeonatoId: $nombresEquipos');
+    print('Nombres de equipos para el campeonato $campeonatoId: $nombresEquipos');
 
     return nombresEquipos;
   }
 
   @override
   Widget build(BuildContext context) {
+    // Estilos para texto
+    TextStyle estilo_nombre = GoogleFonts.oswald(
+      textStyle: TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+    TextStyle estilo_seccion = GoogleFonts.oswald(
+      textStyle: TextStyle(
+        fontSize: 19,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+    TextStyle estilo_dato = GoogleFonts.oswald(
+      textStyle: TextStyle(fontSize: 17, color: Colors.white),
+    );
+
     print('Construyendo widget');
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(image: fondo, fit: BoxFit.cover),
-        ),
-        child: ListView.builder(
-          itemCount: campeonatos.length,
-          itemBuilder: (context, index) {
-            final campeonato = campeonatos[index];
-            final nombresEquipos = obtenerNombresEquipos(campeonato['id']);
-            print(
-                'Construyendo ListTile para el campeonato: ${campeonato['nombre']}');
-            return Container(
-              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(10.0),
-                border: Border.all(
-                  color: Colors.teal,
-                  width: 2.0,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+
+        body: FutureBuilder<void>(
+          future: _cargarDatosFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                color: Colors.black,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error al cargar datos: ${snapshot.error}'));
+            } else {
+              return Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(image: fondo, fit: BoxFit.cover),
                 ),
-              ),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/compes_icono.png'),
-                  backgroundColor: Colors.black,
-                ),
-                title: Text(
-                  '💠 ${campeonato['nombre']}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                subtitle: Text(
-                  'Fecha: ${campeonato['fecha_inicio']}',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  print(
-                      'Navegando a detalles del campeonato: ${campeonato['nombre']}');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CompeDetalles(
-                        campeonato: campeonato,
-                        nombresEquipos: nombresEquipos,
+                child: ListView.builder(
+                  itemCount: campeonatos.length,
+                  itemBuilder: (context, index) {
+                    final campeonato = campeonatos[index];
+                    final nombresEquipos = obtenerNombresEquipos(campeonato['id']);
+                    print('Construyendo ListTile para el campeonato: ${campeonato['nombre']}');
+                    return Container(
+                      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(
+                          color: Colors.teal,
+                          width: 2.0,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: AssetImage('assets/images/compes_icono.png'),
+                          backgroundColor: Colors.black,
+                        ),
+                        title: Text(
+                          '💠 ${campeonato['nombre']}',
+                          style: estilo_seccion,
+                        ),
+                        subtitle: Text(
+                          'Fecha: ${campeonato['fecha_inicio']}',
+                          style: estilo_dato,
+                        ),
+                        onTap: () {
+                          print('Navegando a detalles del campeonato: ${campeonato['nombre']}');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CompeDetalles(
+                                campeonato: campeonato,
+                                nombresEquipos: nombresEquipos,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
           },
         ),
       ),

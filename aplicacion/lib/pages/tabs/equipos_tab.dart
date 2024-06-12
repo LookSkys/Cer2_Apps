@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:aplicacion/pages/tabs/equipo_detalles.dart';
 import 'package:aplicacion/services/http_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EquiposTab extends StatefulWidget {
   const EquiposTab({Key? key}) : super(key: key);
@@ -15,10 +16,12 @@ class _EquiposTabState extends State<EquiposTab> {
   List<dynamic> equipos = [];
   List<dynamic> jugadores = [];
 
+  late Future<void> _cargarEquiposFuture;
+
   @override
   void initState() {
     super.initState();
-    cargarEquipos();
+    _cargarEquiposFuture = cargarEquipos();
   }
 
   Future<void> cargarEquipos() async {
@@ -50,57 +53,89 @@ class _EquiposTabState extends State<EquiposTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(image: fondo, fit: BoxFit.cover),
-        ),
-        child: ListView.builder(
-          itemCount: equipos.length,
-          itemBuilder: (context, index) {
-            final equipo = equipos[index];
-            final nombresJugadores = obtenerNombresJugadores(equipo['id']);
+    // Estilos para texto
+    TextStyle estilo_nombre = GoogleFonts.oswald(
+      textStyle: TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+    TextStyle estilo_seccion = GoogleFonts.oswald(
+      textStyle: TextStyle(
+        fontSize: 19,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+    TextStyle estilo_dato = GoogleFonts.oswald(
+      textStyle: TextStyle(fontSize: 17, color: Colors.white),
+    );
 
+    return Scaffold(
+      body: FutureBuilder<void>(
+        future: _cargarEquiposFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
-              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              padding: EdgeInsets.all(16.0),
+              color: Colors.black,
+              child: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error al cargar datos: ${snapshot.error}'));
+          } else {
+            return Container(
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(10.0),
-                border: Border.all(
-                  color: Colors.teal,
-                  width: 2.0,
-                ),
+                image: DecorationImage(image: fondo, fit: BoxFit.cover),
               ),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/equipo_icono.png'),
-                  backgroundColor: Colors.black,
-                ),
-                title: Text(
-                  '💠 ${equipo['nombre']}',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                subtitle: Text(
-                  'Entrenador: ${equipo['entrenador']}',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EquipoDetalles(
-                        equipo: equipo,
-                        jugadores: nombresJugadores,
+              child: ListView.builder(
+                itemCount: equipos.length,
+                itemBuilder: (context, index) {
+                  final equipo = equipos[index];
+                  final nombresJugadores = obtenerNombresJugadores(equipo['id']);
+
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                        color: Colors.teal,
+                        width: 2.0,
                       ),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/images/equipo_icono.png'),
+                        backgroundColor: Colors.black,
+                      ),
+                      title: Text(
+                        '💠 ${equipo['nombre']}',
+                        style: estilo_seccion,
+                      ),
+                      subtitle: Text(
+                        'Entrenador: ${equipo['entrenador']}',
+                        style: estilo_dato,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EquipoDetalles(
+                              equipo: equipo,
+                              jugadores: nombresJugadores,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },
               ),
             );
-          },
-        ),
+          }
+        },
       ),
     );
   }
