@@ -11,29 +11,57 @@ class CompesTab extends StatefulWidget {
 
 class _CompesTabState extends State<CompesTab> {
   final AssetImage fondo = AssetImage('assets/images/fondo_equipo.jpg');
-  final HttpService httpService = HttpService(); // Instancia de tu HttpService
-  List<dynamic> campeonatos = []; // Lista para almacenar los equipos
+  final HttpService httpService = HttpService();
+  List<dynamic> campeonatos = [];
+  List<dynamic> equipos = [];
+  List<dynamic> campeonatoEquipo = [];
 
   @override
   void initState() {
     super.initState();
-    cargar(); // Cargar equipos al inicializar la página
+    cargarDatos();
   }
 
-  Future<void> cargar() async {
+  Future<void> cargarDatos() async {
     try {
       List<dynamic> listaCampeonatos = await httpService.campeonatos();
+      print('Campeonatos cargados: $listaCampeonatos');
+      List<dynamic> listaEquipos = await httpService.equipos();
+      print('Equipos cargados: $listaEquipos');
+      List<dynamic> listaCampeonatoEquipo =
+          await httpService.campeonatoEquipo();
+      print('Campeonato-Equipo relaciones cargadas: $listaCampeonatoEquipo');
       setState(() {
         campeonatos = listaCampeonatos;
+        equipos = listaEquipos;
+        campeonatoEquipo = listaCampeonatoEquipo;
       });
     } catch (e) {
-      print('Error al cargar equipos: $e');
+      print('Error al cargar campeonatos, equipos o relaciones: $e');
     }
   }
-  
+
+  List<String> obtenerNombresEquipos(int campeonatoId) {
+    print('Obteniendo nombres de equipos para el campeonato ID: $campeonatoId');
+    List<int> idsEquipos = campeonatoEquipo
+        .where((ce) => ce['campeonato_id'] == campeonatoId)
+        .map<int>((ce) => ce['equipo_id'])
+        .toList();
+    print('IDs de equipos para el campeonato $campeonatoId: $idsEquipos');
+
+    List<String> nombresEquipos = equipos
+        .where((equipo) => idsEquipos.contains(equipo['id']))
+        .map<String>((equipo) => equipo['nombre'])
+        .toList();
+    print(
+        'Nombres de equipos para el campeonato $campeonatoId: $nombresEquipos');
+
+    return nombresEquipos;
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('Construyendo widget');
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -42,18 +70,20 @@ class _CompesTabState extends State<CompesTab> {
         child: ListView.builder(
           itemCount: campeonatos.length,
           itemBuilder: (context, index) {
-            // Aquí construyes los elementos para cada equipo
+            final campeonato = campeonatos[index];
+            final nombresEquipos = obtenerNombresEquipos(campeonato['id']);
+            print(
+                'Construyendo ListTile para el campeonato: ${campeonato['nombre']}');
             return Container(
               margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.black
-                    .withOpacity(0.9), // Fondo blanco semitransparente
+                color: Colors.black.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(10.0),
                 border: Border.all(
                   color: Colors.teal,
                   width: 2.0,
-                )
+                ),
               ),
               child: ListTile(
                 leading: CircleAvatar(
@@ -61,17 +91,28 @@ class _CompesTabState extends State<CompesTab> {
                   backgroundColor: Colors.black,
                 ),
                 title: Text(
-                  '💠 ' + campeonatos[index]['nombre'],
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                  '💠 ${campeonato['nombre']}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-                subtitle: Text('Fecha: ' + campeonatos[index]['fecha_inicio'],
-                style: TextStyle(color: Colors.white),)
-                ,
-                // Agrega más información según tu API
+                subtitle: Text(
+                  'Fecha: ${campeonato['fecha_inicio']}',
+                  style: TextStyle(color: Colors.white),
+                ),
                 onTap: () {
-                  // Acciones al hacer tap en un equipo si es necesario
-                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CompeDetalles()));
+                  print(
+                      'Navegando a detalles del campeonato: ${campeonato['nombre']}');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CompeDetalles(
+                        campeonato: campeonato,
+                        nombresEquipos: nombresEquipos,
+                      ),
+                    ),
+                  );
                 },
               ),
             );

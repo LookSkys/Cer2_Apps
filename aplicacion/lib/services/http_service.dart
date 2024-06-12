@@ -25,6 +25,14 @@ class HttpService {
     return listarDatos('resultados');
   }
 
+  Future<List<dynamic>> campeonatoEquipo() async {
+    return listarDatos('campeonato_equipo');
+  }
+
+  Future<List<dynamic>> equipoPartido() async {
+    return listarDatos('equipo_partido');
+  }
+
   Future<List<dynamic>> listarDatos(String coleccion) async {
     var respuesta = await http.get(Uri.parse(baseURL + '/' + coleccion));
 

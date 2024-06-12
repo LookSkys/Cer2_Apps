@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\Campeonato_equipoController;
 use App\Http\Controllers\CampeonatosController;
+use App\Http\Controllers\Equipo_partidoController;
 use App\Http\Controllers\EquiposController;
-use App\Http\Controllers\EstadiosController;
 use App\Http\Controllers\JugadoresController;
 use App\Http\Controllers\PartidosController;
 use App\Http\Controllers\ResultadosController;
@@ -18,3 +19,5 @@ Route::resource('/jugadores', JugadoresController::class);
 Route::resource('/partidos', PartidosController::class);
 Route::resource('/campeonatos', CampeonatosController::class);
 route::resource('/resultados', ResultadosController::class);
+route::resource('/equipo_partido', Equipo_partidoController::class);
+route::resource('/campeonato_equipo', Campeonato_equipoController::class);
