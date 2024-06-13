@@ -29,7 +29,12 @@ class EquiposController
      */
     public function store(Request $request)
     {
-        //
+        $equipo = new Equipo();
+        $equipo->nombre = $request->nombre;
+        $equipo->entrenador = $request->entrenador;
+        $equipo->juegos_en_donde_participa = $request->juegos_en_donde_participa;
+        $equipo->save();
+        return $equipo;
     }
 
     /**
@@ -45,7 +50,7 @@ class EquiposController
      */
     public function edit(Equipo $equipo)
     {
-        //
+        return $equipo;
     }
 
     /**
@@ -53,7 +58,12 @@ class EquiposController
      */
     public function update(Request $request, Equipo $equipo)
     {
-        //
+        $equipo->nombre = $request->nombre;
+        $equipo->entrenador = $request->entrenador;
+        $equipo->juegos_en_donde_participa = $request->juegos_en_donde_participa;
+        $equipo->save();
+
+        return $equipo;
     }
 
     /**
@@ -61,6 +71,6 @@ class EquiposController
      */
     public function destroy(Equipo $equipo)
     {
-        //
+        return $equipo->delete();
     }
 }

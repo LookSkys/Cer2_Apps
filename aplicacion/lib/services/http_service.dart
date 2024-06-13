@@ -81,4 +81,48 @@ class HttpService {
       return false;
     }
   }
+
+  Future<bool> eliminarEquipos(int equipoId) async {
+    var url = Uri.parse(
+        baseURL + '/equipos/' + equipoId.toString()); // Corregido el endpoint
+    var response = await http.delete(url);
+    return response.statusCode == 200;
+  }
+
+  Future<bool> editarEquipos(Map<String, dynamic> equipo) async {
+    var url = Uri.parse(baseURL +
+        '/equipos/' +
+        equipo['id'].toString()); // Corregido el endpoint
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'nombre': equipo['nombre'],
+        'entrenador': equipo['entrenador'],
+        'juegos_en_donde_participa': equipo['juegos_en_donde_participa'],
+      }),
+    );
+    return response.statusCode == 200;
+  }
+
+  Future<bool> agregarJugador(Map<String, dynamic> jugador) async {
+    var url =
+        Uri.parse(baseURL + '/jugadores'); // Endpoint para agregar jugadores
+    var response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'rut': jugador['rut'],
+        'nombre': jugador['nombre'],
+        'apellido': jugador['apellido'],
+        'equipo_id':
+            jugador['equipo_id'], // ID del equipo al que se agrega el jugador
+      }),
+    );
+    return response.statusCode == 201; // 201 indica que se creó exitosamente
+  }
 }

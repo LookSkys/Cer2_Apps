@@ -1,6 +1,7 @@
-import 'package:aplicacion/widgets/appBar_seccion.dart';
+import 'package:aplicacion/pages/tabs/editar_jugadores.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:aplicacion/widgets/appBar_seccion.dart';
 
 class EquipoDetalles extends StatelessWidget {
   final dynamic equipo;
@@ -11,19 +12,19 @@ class EquipoDetalles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> juegosParticipa = equipo['juegos_en_donde_participa'] != null
-        ? List<String>.from(equipo['juegos_en_donde_participa'])
-        : [];
+    List<String> juegosParticipa =
+        List<String>.from(equipo['juegos_en_donde_participa']);
+
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    //Estilos para texto
-    TextStyle estilo_nombre = GoogleFonts.oswald(
+    // Estilos para texto
+    TextStyle estiloNombre = GoogleFonts.oswald(
         textStyle: TextStyle(
             fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white));
-    TextStyle estilo_seccion = GoogleFonts.oswald(
+    TextStyle estiloSeccion = GoogleFonts.oswald(
         textStyle: TextStyle(
             fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white));
-    TextStyle estilo_dato = GoogleFonts.oswald(
+    TextStyle estiloDato = GoogleFonts.oswald(
         textStyle: TextStyle(fontSize: 17, color: Colors.white));
 
     return Scaffold(
@@ -52,23 +53,23 @@ class EquipoDetalles extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${equipo['nombre']}', style: estilo_nombre),
+                Text('${equipo['nombre']}', style: estiloNombre),
                 SizedBox(height: 10),
                 Text('🧔 Entrenador: ${equipo['entrenador']}',
-                    style: estilo_dato),
+                    style: estiloDato),
                 SizedBox(height: 20),
-                Text('Jugadores:', style: estilo_seccion),
+                Text('Jugadores:', style: estiloSeccion),
                 ...jugadores
                     .map((nombre) => Text(
                           '😼 $nombre',
-                          style: estilo_dato,
+                          style: estiloDato,
                         ))
                     .toList(),
                 if (jugadores.isEmpty)
                   Text('No hay jugadores registrados en este equipo.',
-                      style: estilo_dato),
+                      style: estiloDato),
                 SizedBox(height: 20),
-                Text('Juegos en donde participa:', style: estilo_seccion),
+                Text('Juegos en donde participa:', style: estiloSeccion),
                 ...juegosParticipa
                     .map((juego) => Text(
                           '🎮 $juego',
@@ -77,7 +78,27 @@ class EquipoDetalles extends StatelessWidget {
                     .toList(),
                 if (juegosParticipa.isEmpty)
                   Text('Este equipo no participa en ningún juego.',
-                      style: estilo_dato),
+                      style: estiloDato),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditarJugadores(
+                          equipoId: (equipo['id']),
+                        ),
+                      ),
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(Colors.teal),
+                  ),
+                  child: Text(
+                    'Agregar Jugador',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
               ],
             ),
           ),

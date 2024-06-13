@@ -29,7 +29,16 @@ class JugadoresController
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'rut' => 'required|unique:jugadores',
+            'nombre' => 'required',
+            'apellido' => 'required',
+            'equipo_id' => 'required|exists:equipos,id',
+        ]);
+
+        $jugador = Jugador::create($request->all());
+
+        return response()->json($jugador, 201);
     }
 
     /**

@@ -1,3 +1,4 @@
+import 'package:aplicacion/pages/tabs/editar_equipo.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicacion/pages/tabs/equipo_detalles.dart';
 import 'package:aplicacion/services/http_service.dart';
@@ -49,6 +50,32 @@ class _EquiposTabState extends State<EquiposTab> {
         .toList();
 
     return nombresJugadores;
+  }
+
+  Future<void> eliminarEquipo(int equipoId) async {
+    try {
+      bool eliminado = await httpService.eliminarEquipos(equipoId);
+      if (eliminado) {
+        setState(() {
+          equipos.removeWhere((equipo) => equipo['id'] == equipoId);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Equipo eliminado correctamente'),
+          duration: Duration(seconds: 2),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error al eliminar equipo'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+    } catch (e) {
+      print('Error al eliminar equipo: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error al eliminar equipo'),
+        duration: Duration(seconds: 2),
+      ));
+    }
   }
 
   @override
@@ -132,6 +159,61 @@ class _EquiposTabState extends State<EquiposTab> {
                           ),
                         );
                       },
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            color: Colors.blue,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditarEquipo(
+                                    equipo: equipo,
+                                    equipoId: equipo['id'],
+                                  ),
+                                ),
+                              ).then((value) {
+                                if (value == true) {
+                                  cargarEquipos();
+                                }
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            color: Colors.red,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Confirmación'),
+                                    content: Text(
+                                        '¿Estás seguro de querer eliminar este equipo?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('Cancelar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text('Aceptar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          eliminarEquipo(equipo['id']);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
