@@ -18,9 +18,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('equipo_ganador_id')->nullable(false);
             $table->unsignedBigInteger('equipo_perdedor_id')->nullable(false);
 
-            $table->foreign('partido_id')->references('id')->on('partidos');
-            $table->foreign('equipo_ganador_id')->references('id')->on('equipos');
-            $table->foreign('equipo_perdedor_id')->references('id')->on('equipos');
+            $table->foreign('partido_id')->references('id')->on('partidos')->onDelete('cascade');
+            $table->foreign('equipo_ganador_id')->references('id')->on('equipos')->onDelete('cascade');
+            $table->foreign('equipo_perdedor_id')->references('id')->on('equipos')->onDelete('cascade');
             //$table->timestamps();
         });
     }

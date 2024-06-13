@@ -42,4 +42,43 @@ class HttpService {
     print(respuesta.statusCode);
     return [];
   }
+
+  Future<bool> eliminarCampeonato(int campeonatoId) async {
+    var url = Uri.parse(baseURL + '/campeonatos/' + campeonatoId.toString());
+    var response = await http.delete(url);
+    return response.statusCode == 200;
+  }
+
+  Future<bool> editarCampeonato(Map<String, dynamic> campeonato) async {
+    var url =
+        Uri.parse(baseURL + '/campeonatos/' + campeonato['id'].toString());
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'nombre': campeonato['nombre'],
+        'fecha_inicio': campeonato['fecha_inicio'],
+        'fecha_fin': campeonato['fecha_fin'],
+        'reglas': campeonato['reglas'],
+        'premios': campeonato['premios'],
+      }),
+    );
+    return response.statusCode == 200;
+  }
+
+  Future<bool> vincularEquipo(int campeonatoId, int equipoId) async {
+    final response = await http.post(
+      Uri.parse('$baseURL/campeonatos/$campeonatoId/equipos'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'equipo_id': equipoId}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

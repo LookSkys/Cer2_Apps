@@ -54,21 +54,14 @@ class _EquiposTabState extends State<EquiposTab> {
   @override
   Widget build(BuildContext context) {
     // Estilos para texto
-    TextStyle estilo_nombre = GoogleFonts.oswald(
-      textStyle: TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
-    TextStyle estilo_seccion = GoogleFonts.oswald(
+    TextStyle estiloSeccion = GoogleFonts.oswald(
       textStyle: TextStyle(
         fontSize: 19,
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
     );
-    TextStyle estilo_dato = GoogleFonts.oswald(
+    TextStyle estiloDato = GoogleFonts.oswald(
       textStyle: TextStyle(fontSize: 17, color: Colors.white),
     );
 
@@ -78,11 +71,18 @@ class _EquiposTabState extends State<EquiposTab> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
-              color: Colors.black,
-              child: Center(child: CircularProgressIndicator()),
+              decoration: BoxDecoration(
+                image: DecorationImage(image: fondo, fit: BoxFit.cover),
+              ),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.teal, // Cambia el color aquí
+                ),
+              ),
             );
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error al cargar datos: ${snapshot.error}'));
+            return Center(
+                child: Text('Error al cargar datos: ${snapshot.error}'));
           } else {
             return Container(
               decoration: BoxDecoration(
@@ -92,10 +92,12 @@ class _EquiposTabState extends State<EquiposTab> {
                 itemCount: equipos.length,
                 itemBuilder: (context, index) {
                   final equipo = equipos[index];
-                  final nombresJugadores = obtenerNombresJugadores(equipo['id']);
+                  final nombresJugadores =
+                      obtenerNombresJugadores(equipo['id']);
 
                   return Container(
-                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    margin:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.9),
@@ -107,16 +109,17 @@ class _EquiposTabState extends State<EquiposTab> {
                     ),
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/equipo_icono.png'),
+                        backgroundImage:
+                            AssetImage('assets/images/equipo_icono.png'),
                         backgroundColor: Colors.black,
                       ),
                       title: Text(
                         '💠 ${equipo['nombre']}',
-                        style: estilo_seccion,
+                        style: estiloSeccion,
                       ),
                       subtitle: Text(
                         'Entrenador: ${equipo['entrenador']}',
-                        style: estilo_dato,
+                        style: estiloDato,
                       ),
                       onTap: () {
                         Navigator.push(

@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('equipo_id');
             $table->primary(['campeonato_id', 'equipo_id']);
 
-            $table->foreign('campeonato_id')->references('id')->on('campeonato');
-            $table->foreign('equipo_id')->references('id')->on('equipos');
+            $table->foreign('campeonato_id')->references('id')->on('campeonato')->onDelete('cascade');
+            $table->foreign('equipo_id')->references('id')->on('equipos')->onDelete('cascade');
             //$table->timestamps();
         });
     }

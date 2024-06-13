@@ -11,18 +11,14 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     //Estilos para texto
-        TextStyle estilo_nombre = GoogleFonts.oswald(textStyle:  TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-        color: Colors.white));
-    TextStyle estilo_seleccionado = GoogleFonts.oswald(textStyle:  TextStyle(
-        fontSize: 15,
-        color: Colors.teal));
-    TextStyle estilo_deseleccionado = GoogleFonts.oswald(textStyle:  TextStyle(
-        fontSize: 15,
-        color: Colors.white));
+    TextStyle estilo_nombre = GoogleFonts.oswald(
+        textStyle: TextStyle(
+            fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white));
+    TextStyle estilo_seleccionado = GoogleFonts.oswald(
+        textStyle: TextStyle(fontSize: 15, color: Colors.teal));
+    TextStyle estilo_deseleccionado = GoogleFonts.oswald(
+        textStyle: TextStyle(fontSize: 15, color: Colors.white));
 
     return Center(
       child: DefaultTabController(
@@ -38,7 +34,7 @@ class HomeScreen extends StatelessWidget {
               labelStyle: estilo_seleccionado,
               unselectedLabelStyle: estilo_deseleccionado,
               tabs: [
-                Tab(     
+                Tab(
                   text: 'Competiciones',
                   icon: Icon(MdiIcons.tournament),
                 ),

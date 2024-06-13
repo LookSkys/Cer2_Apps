@@ -14,6 +14,8 @@ class _ResultadosTabState extends State<ResultadosTab> {
   final HttpService httpService = HttpService();
   List<dynamic> resultados = [];
   List<dynamic> equipos = [];
+  List<dynamic> campeonatos = [];
+  List<dynamic> partidos = [];
 
   late Future<void> _cargarResultadosFuture;
 
@@ -27,40 +29,72 @@ class _ResultadosTabState extends State<ResultadosTab> {
     try {
       List<dynamic> listaResultados = await httpService.resultados();
       List<dynamic> listaEquipos = await httpService.equipos();
+      List<dynamic> listaCampeonatos = await httpService.campeonatos();
+      List<dynamic> listaPartidos = await httpService.partidos();
       setState(() {
         resultados = listaResultados;
         equipos = listaEquipos;
+        campeonatos = listaCampeonatos;
+        partidos = listaPartidos;
       });
     } catch (e) {
-      print('Error al cargar resultados o equipos: $e');
+      print('Error al cargar resultados, equipos, campeonatos o partidos: $e');
     }
   }
 
-  String obtenerNombreEquipo(int id) {
-    final equipo = equipos.firstWhere((equipo) => equipo['id'] == id, orElse: () => null);
+  String obtenerNombreEquipo(int? id) {
+    if (id == null) {
+      return 'Desconocido';
+    }
+    final equipo =
+        equipos.firstWhere((equipo) => equipo['id'] == id, orElse: () => null);
     return equipo != null ? equipo['nombre'] : 'Desconocido';
+  }
+
+  String obtenerNombreCampeonato(int? partidoId) {
+    if (partidoId == null) {
+      return 'Desconocido';
+    }
+
+    print('Buscando campeonato para partido ID: $partidoId');
+
+    // Buscar el partido por partidoId
+    final partido = partidos.firstWhere(
+      (partido) => partido['id'] == partidoId,
+      orElse: () => null,
+    );
+
+    if (partido == null) {
+      print('No se encontró el partido con ID: $partidoId');
+      return 'Desconocido';
+    }
+
+    print('Partido encontrado: $partido');
+
+    // Obtener el campeonato por id_campeonato
+    final idCampeonato = partido['campeonato_id'];
+    final campeonato = campeonatos.firstWhere(
+      (campeonato) => campeonato['id'] == idCampeonato,
+      orElse: () => null,
+    );
+
+    if (campeonato == null) {
+      print('No se encontró el campeonato con ID: $idCampeonato');
+      return 'Desconocido';
+    }
+
+    print('Campeonato encontrado: $campeonato');
+
+    return campeonato['nombre'] ?? 'Desconocido';
   }
 
   @override
   Widget build(BuildContext context) {
     // Estilos para texto
-    TextStyle estilo_nombre = GoogleFonts.oswald(
-      textStyle: TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
     TextStyle estilo_seccion = GoogleFonts.oswald(
       textStyle: TextStyle(
         fontSize: 19,
         fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
-    TextStyle estilo_dato = GoogleFonts.oswald(
-      textStyle: TextStyle(
-        fontSize: 17,
         color: Colors.white,
       ),
     );
@@ -71,11 +105,13 @@ class _ResultadosTabState extends State<ResultadosTab> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
-              color: Colors.black,
+              decoration: BoxDecoration(
+                  image: DecorationImage(image: fondo, fit: BoxFit.cover)),
               child: Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error al cargar datos: ${snapshot.error}'));
+            return Center(
+                child: Text('Error al cargar datos: ${snapshot.error}'));
           } else {
             return Container(
               decoration: BoxDecoration(
@@ -85,11 +121,16 @@ class _ResultadosTabState extends State<ResultadosTab> {
                 itemCount: resultados.length,
                 itemBuilder: (context, index) {
                   final resultado = resultados[index];
-                  final nombreGanador = obtenerNombreEquipo(resultado['equipo_ganador_id']);
-                  final nombrePerdedor = obtenerNombreEquipo(resultado['equipo_perdedor_id']);
+                  final nombreGanador =
+                      obtenerNombreEquipo(resultado['equipo_ganador_id']);
+                  final nombrePerdedor =
+                      obtenerNombreEquipo(resultado['equipo_perdedor_id']);
+                  final partidoId = resultado['partido_id'];
+                  final nombreCampeonato = obtenerNombreCampeonato(partidoId);
 
                   return Container(
-                    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    margin:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.9),
@@ -101,15 +142,16 @@ class _ResultadosTabState extends State<ResultadosTab> {
                     ),
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/resultado_icono.png'),
+                        backgroundImage:
+                            AssetImage('assets/images/resultado_icono.png'),
                         backgroundColor: Colors.black,
                       ),
                       title: Text(
-                        '🏆 Ganador: $nombreGanador',
+                        '🏆 Competencia: $nombreCampeonato',
                         style: estilo_seccion,
                       ),
                       subtitle: Text(
-                        '❌ Perdedor: $nombrePerdedor',
+                        '✔️ Ganador: $nombreGanador\n❌ Perdedor: $nombrePerdedor',
                         style: estilo_seccion,
                       ),
                       onTap: () {

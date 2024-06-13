@@ -17,22 +17,22 @@ class EquipoDetalles extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     //Estilos para texto
-        TextStyle estilo_nombre = GoogleFonts.oswald(textStyle:  TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-        color: Colors.white));
-    TextStyle estilo_seccion = GoogleFonts.oswald(textStyle:  TextStyle(
-        fontSize: 19,
-        fontWeight: FontWeight.bold,
-        color: Colors.white));
-    TextStyle estilo_dato =
-        GoogleFonts.oswald(textStyle:  TextStyle(fontSize: 17, color: Colors.white));
+    TextStyle estilo_nombre = GoogleFonts.oswald(
+        textStyle: TextStyle(
+            fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white));
+    TextStyle estilo_seccion = GoogleFonts.oswald(
+        textStyle: TextStyle(
+            fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white));
+    TextStyle estilo_dato = GoogleFonts.oswald(
+        textStyle: TextStyle(fontSize: 17, color: Colors.white));
 
     return Scaffold(
       appBar: AppbarSeccion(nombre_appbar: 'Detalle Equipo 👥'),
       body: Container(
-          decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/fondo_detalles.jpeg'), fit: BoxFit.cover),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/fondo_detalles.jpeg'),
+              fit: BoxFit.cover),
         ),
         padding: const EdgeInsets.all(16.0),
         width: double.infinity,
@@ -52,47 +52,32 @@ class EquipoDetalles extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${equipo['nombre']}',
-                  style: estilo_nombre
-                ),
+                Text('${equipo['nombre']}', style: estilo_nombre),
                 SizedBox(height: 10),
-                Text(
-                  '- Entrenador: ${equipo['entrenador']}',
-                  style: estilo_dato
-                ),
+                Text('🧔 Entrenador: ${equipo['entrenador']}',
+                    style: estilo_dato),
                 SizedBox(height: 20),
-                Text(
-                  'Jugadores:',
-                  style: estilo_seccion
-                ),
+                Text('Jugadores:', style: estilo_seccion),
                 ...jugadores
                     .map((nombre) => Text(
-                          '- $nombre',
+                          '😼 $nombre',
                           style: estilo_dato,
                         ))
                     .toList(),
                 if (jugadores.isEmpty)
-                  Text(
-                    'No hay jugadores registrados en este equipo.',
-                    style: estilo_dato
-                  ),
+                  Text('No hay jugadores registrados en este equipo.',
+                      style: estilo_dato),
                 SizedBox(height: 20),
-                Text(
-                  'Juegos en donde participa:',
-                  style: estilo_seccion
-                ),
+                Text('Juegos en donde participa:', style: estilo_seccion),
                 ...juegosParticipa
                     .map((juego) => Text(
-                          '- $juego',
+                          '🎮 $juego',
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ))
                     .toList(),
                 if (juegosParticipa.isEmpty)
-                  Text(
-                    'Este equipo no participa en ningún juego.',
-                    style: estilo_dato
-                  ),
+                  Text('Este equipo no participa en ningún juego.',
+                      style: estilo_dato),
               ],
             ),
           ),

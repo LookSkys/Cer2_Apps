@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->primary(['equipo_id', 'partido_id']);
             $table->boolean('es_ganador');
 
-            $table->foreign('equipo_id')->references('id')->on('equipos');
-            $table->foreign('partido_id')->references('id')->on('partidos');
+            $table->foreign('equipo_id')->references('id')->on('equipos')->onDelete('cascade');
+            $table->foreign('partido_id')->references('id')->on('partidos')->onDelete('cascade');
             //$table->timestamps();
         });
     }

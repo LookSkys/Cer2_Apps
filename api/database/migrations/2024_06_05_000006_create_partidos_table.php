@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('lugar', 50)->nullable(false);
             $table->unsignedBigInteger('campeonato_id')->nullable(false);
 
-            $table->foreign('campeonato_id')->references('id')->on('campeonato');
+            $table->foreign('campeonato_id')->references('id')->on('campeonato')->onDelete('cascade');
             //$table->timestamps();
         });
     }

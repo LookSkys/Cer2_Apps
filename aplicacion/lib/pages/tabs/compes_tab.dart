@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aplicacion/pages/tabs/compe_detalles.dart';
+import 'package:aplicacion/pages/tabs/edit_compe.dart'; // Importa la pantalla de edición
 import 'package:aplicacion/services/http_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,29 +11,25 @@ class CompesTab extends StatefulWidget {
   _CompesTabState createState() => _CompesTabState();
 }
 
-class _CompesTabState extends State<CompesTab> with SingleTickerProviderStateMixin {
+class _CompesTabState extends State<CompesTab> {
   final AssetImage fondo = AssetImage('assets/images/fondo_equipo.jpg');
   final HttpService httpService = HttpService();
   List<dynamic> campeonatos = [];
   List<dynamic> equipos = [];
   List<dynamic> campeonatoEquipo = [];
 
-  late Future<void> _cargarDatosFuture;
-
   @override
   void initState() {
     super.initState();
-    _cargarDatosFuture = cargarDatos();
+    cargarDatos();
   }
 
   Future<void> cargarDatos() async {
     try {
       List<dynamic> listaCampeonatos = await httpService.campeonatos();
-      print('Campeonatos cargados: $listaCampeonatos');
       List<dynamic> listaEquipos = await httpService.equipos();
-      print('Equipos cargados: $listaEquipos');
-      List<dynamic> listaCampeonatoEquipo = await httpService.campeonatoEquipo();
-      print('Campeonato-Equipo relaciones cargadas: $listaCampeonatoEquipo');
+      List<dynamic> listaCampeonatoEquipo =
+          await httpService.campeonatoEquipo();
       setState(() {
         campeonatos = listaCampeonatos;
         equipos = listaEquipos;
@@ -44,71 +41,82 @@ class _CompesTabState extends State<CompesTab> with SingleTickerProviderStateMix
   }
 
   List<String> obtenerNombresEquipos(int campeonatoId) {
-    print('Obteniendo nombres de equipos para el campeonato ID: $campeonatoId');
     List<int> idsEquipos = campeonatoEquipo
         .where((ce) => ce['campeonato_id'] == campeonatoId)
         .map<int>((ce) => ce['equipo_id'])
         .toList();
-    print('IDs de equipos para el campeonato $campeonatoId: $idsEquipos');
 
     List<String> nombresEquipos = equipos
         .where((equipo) => idsEquipos.contains(equipo['id']))
         .map<String>((equipo) => equipo['nombre'])
         .toList();
-    print('Nombres de equipos para el campeonato $campeonatoId: $nombresEquipos');
 
     return nombresEquipos;
+  }
+
+  Future<void> eliminarCampeonato(int campeonatoId) async {
+    try {
+      bool eliminado = await httpService.eliminarCampeonato(campeonatoId);
+      if (eliminado) {
+        // Actualizar lista después de eliminar
+        await cargarDatos();
+        // Mostrar un mensaje de éxito
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Campeonato eliminado correctamente'),
+          duration: Duration(seconds: 2),
+        ));
+      } else {
+        // Mostrar mensaje de error
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error al eliminar campeonato'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+    } catch (e) {
+      // Mostrar mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error al eliminar campeonato'),
+        duration: Duration(seconds: 2),
+      ));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     // Estilos para texto
-    TextStyle estilo_nombre = GoogleFonts.oswald(
-      textStyle: TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
-    TextStyle estilo_seccion = GoogleFonts.oswald(
+    TextStyle estiloSeccion = GoogleFonts.oswald(
       textStyle: TextStyle(
         fontSize: 19,
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
     );
-    TextStyle estilo_dato = GoogleFonts.oswald(
+    TextStyle estiloDato = GoogleFonts.oswald(
       textStyle: TextStyle(fontSize: 17, color: Colors.white),
     );
 
-    print('Construyendo widget');
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-
-        body: FutureBuilder<void>(
-          future: _cargarDatosFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container(
-                color: Colors.black,
-                child: Center(child: CircularProgressIndicator()),
-              );
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error al cargar datos: ${snapshot.error}'));
-            } else {
-              return Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(image: fondo, fit: BoxFit.cover),
-                ),
-                child: ListView.builder(
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: fondo, fit: BoxFit.cover),
+          ),
+          child: campeonatos.isEmpty
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.teal, // Cambia el color aquí
+                  ),
+                )
+              : ListView.builder(
                   itemCount: campeonatos.length,
                   itemBuilder: (context, index) {
                     final campeonato = campeonatos[index];
-                    final nombresEquipos = obtenerNombresEquipos(campeonato['id']);
-                    print('Construyendo ListTile para el campeonato: ${campeonato['nombre']}');
+                    final nombresEquipos =
+                        obtenerNombresEquipos(campeonato['id']);
                     return Container(
-                      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      margin:
+                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                       padding: EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.9),
@@ -118,21 +126,8 @@ class _CompesTabState extends State<CompesTab> with SingleTickerProviderStateMix
                           width: 2.0,
                         ),
                       ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: AssetImage('assets/images/compes_icono.png'),
-                          backgroundColor: Colors.black,
-                        ),
-                        title: Text(
-                          '💠 ${campeonato['nombre']}',
-                          style: estilo_seccion,
-                        ),
-                        subtitle: Text(
-                          'Fecha: ${campeonato['fecha_inicio']}',
-                          style: estilo_dato,
-                        ),
+                      child: GestureDetector(
                         onTap: () {
-                          print('Navegando a detalles del campeonato: ${campeonato['nombre']}');
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -143,13 +138,85 @@ class _CompesTabState extends State<CompesTab> with SingleTickerProviderStateMix
                             ),
                           );
                         },
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  AssetImage('assets/images/compes_icono.png'),
+                              backgroundColor: Colors.black,
+                            ),
+                            SizedBox(width: 16.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '💠 ${campeonato['nombre']}',
+                                    style: estiloSeccion,
+                                  ),
+                                  Text(
+                                    'Fecha: ${campeonato['fecha_inicio']}',
+                                    style: estiloDato,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              color: Colors.blue,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditCompe(campeonato: campeonato),
+                                  ),
+                                ).then((value) {
+                                  // Actualizar lista después de editar
+                                  if (value == true) {
+                                    cargarDatos();
+                                  }
+                                });
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              color: Colors.red,
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Confirmación'),
+                                      content: Text(
+                                          '¿Estás seguro de querer eliminar este campeonato?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text('Cancelar'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text('Aceptar'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            eliminarCampeonato(
+                                                campeonato['id']);
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
-              );
-            }
-          },
         ),
       ),
     );

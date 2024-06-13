@@ -41,7 +41,10 @@ class PartidoDetalles extends StatelessWidget {
               SizedBox(height: 10),
               Text(
                 'Lugar: ${partido['lugar']}',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18),
               ),
               SizedBox(height: 20),
               Text(
@@ -54,7 +57,7 @@ class PartidoDetalles extends StatelessWidget {
               ),
               ...nombresEquipos
                   .map((nombre) => Text(
-                        '- $nombre',
+                        '😼 $nombre',
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ))
                   .toList(),

@@ -21,3 +21,4 @@ Route::resource('/campeonatos', CampeonatosController::class);
 route::resource('/resultados', ResultadosController::class);
 route::resource('/equipo_partido', Equipo_partidoController::class);
 route::resource('/campeonato_equipo', Campeonato_equipoController::class);
+Route::post('/campeonatos/{campeonatoId}/equipos', [CampeonatosController::class, 'vincularEquipo']);

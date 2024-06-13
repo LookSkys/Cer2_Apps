@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campeonato;
+use App\Models\Equipo;
+use App\Models\CampeonatoEquipo;
 use Illuminate\Http\Request;
 
 class CampeonatosController
@@ -29,7 +31,14 @@ class CampeonatosController
      */
     public function store(Request $request)
     {
-        //
+        $campeonato = new Campeonato();
+        $campeonato->nombre = $request->nombre;
+        $campeonato->fecha_inicio = $request->fecha_inicio;
+        $campeonato->fecha_fin = $request->fecha_fin;
+        $campeonato->reglas = $request->reglas;
+        $campeonato->premios = $request->premios;
+        $campeonato->save();
+        return $campeonato;
     }
 
     /**
@@ -45,7 +54,7 @@ class CampeonatosController
      */
     public function edit(Campeonato $campeonato)
     {
-        //
+        return $campeonato;
     }
 
     /**
@@ -53,7 +62,13 @@ class CampeonatosController
      */
     public function update(Request $request, Campeonato $campeonato)
     {
-        //
+        $campeonato->nombre = $request->nombre;
+        $campeonato->fecha_inicio = $request->fecha_inicio;
+        $campeonato->fecha_fin = $request->fecha_fin;
+        $campeonato->reglas = $request->reglas;
+        $campeonato->premios = $request->premios;
+        $campeonato->save();
+        return $campeonato;
     }
 
     /**
@@ -61,6 +76,41 @@ class CampeonatosController
      */
     public function destroy(Campeonato $campeonato)
     {
-        //
+        return $campeonato->delete();
     }
+
+    /**
+     * Vincular un equipo a un campeonato.
+     */
+    public function vincularEquipo(Request $request, $campeonatoId)
+    {
+        $equipoId = $request->input('equipo_id');
+
+        // Verificar si el equipo ya está vinculado al campeonato
+        $existeVinculo = CampeonatoEquipo::where('campeonato_id', $campeonatoId)
+            ->where('equipo_id', $equipoId)
+            ->first();
+
+        if ($existeVinculo) {
+            return response()->json(['error' => 'El equipo ya está vinculado a este campeonato'], 400);
+        }
+
+        // Crear el nuevo vínculo
+        $campeonato = Campeonato::find($campeonatoId);
+
+        if (!$campeonato) {
+            return response()->json(['error' => 'Campeonato no encontrado'], 404);
+        }
+
+        $equipo = Equipo::find($equipoId);
+
+        if (!$equipo) {
+            return response()->json(['error' => 'Equipo no encontrado'], 404);
+        }
+
+        $campeonato->equipos()->attach($equipoId);
+
+        return response()->json(['message' => 'Equipo vinculado correctamente'], 201);
+    }
+
 }
