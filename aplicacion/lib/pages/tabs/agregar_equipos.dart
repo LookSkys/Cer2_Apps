@@ -1,36 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:aplicacion/services/http_service.dart';
 
-class EditarEquipo extends StatefulWidget {
-  final Map<String, dynamic> equipo;
-
-  const EditarEquipo({Key? key, required this.equipo, required equipoId})
-      : super(key: key);
+class CrearEquipo extends StatefulWidget {
+  const CrearEquipo({Key? key}) : super(key: key);
 
   @override
-  _EditarDatosEquipoState createState() => _EditarDatosEquipoState();
+  _CrearEquipoState createState() => _CrearEquipoState();
 }
 
-class _EditarDatosEquipoState extends State<EditarEquipo> {
+class _CrearEquipoState extends State<CrearEquipo> {
   final HttpService httpService = HttpService();
   final _formKey = GlobalKey<FormState>();
   TextEditingController _nombreController = TextEditingController();
   TextEditingController _entrenadorController = TextEditingController();
   TextEditingController _juegosController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _nombreController.text = widget.equipo['nombre'];
-    _entrenadorController.text = widget.equipo['entrenador'];
-    _juegosController.text =
-        _convertirListaAString(widget.equipo['juegos_en_donde_participa']);
-  }
-
-  String _convertirListaAString(List<dynamic> lista) {
-    return lista
-        .join(', '); // Convierte la lista a un string separado por comas
-  }
 
   List<String> _convertirStringALista(String texto) {
     return texto
@@ -39,34 +22,33 @@ class _EditarDatosEquipoState extends State<EditarEquipo> {
         .toList(); // Convierte el string separado por comas a una lista
   }
 
-  Future<void> editarEquipo() async {
+  Future<void> crearEquipo() async {
     if (_formKey.currentState?.validate() ?? false) {
       try {
-        final datosEditados = {
-          'id': widget.equipo['id'],
+        final nuevoEquipo = {
           'nombre': _nombreController.text,
           'entrenador': _entrenadorController.text,
           'juegos_en_donde_participa':
               _convertirStringALista(_juegosController.text),
         };
 
-        bool editado = await httpService.editarEquipos(datosEditados);
-        if (editado) {
+        bool creado = await httpService.crearEquipo(nuevoEquipo);
+        if (creado) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Equipo editado correctamente'),
+            content: Text('Equipo creado correctamente'),
             duration: Duration(seconds: 2),
           ));
-          // Actualizar la página de detalles del equipo
+          // Volver a la página anterior o donde sea necesario
           Navigator.pop(context, true);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Error al editar equipo'),
+            content: Text('Error al crear equipo'),
             duration: Duration(seconds: 2),
           ));
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error al editar equipo: $e'),
+          content: Text('Error al crear equipo: $e'),
           duration: Duration(seconds: 2),
         ));
       }
@@ -79,7 +61,7 @@ class _EditarDatosEquipoState extends State<EditarEquipo> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          'Editar Datos del Equipo',
+          'Crear Equipo',
           style: TextStyle(color: Colors.white),
         ),
         iconTheme: IconThemeData(color: Colors.white),
@@ -132,12 +114,12 @@ class _EditarDatosEquipoState extends State<EditarEquipo> {
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: editarEquipo,
+                  onPressed: crearEquipo,
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all(Colors.teal),
                   ),
                   child: Text(
-                    'Guardar cambios',
+                    'Crear equipo',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),

@@ -1,3 +1,4 @@
+import 'package:aplicacion/pages/tabs/compes_tab.dart';
 import 'package:aplicacion/pages/tabs/editar_equipo.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicacion/pages/tabs/equipo_detalles.dart';
@@ -116,8 +117,12 @@ class _EquiposTabState extends State<EquiposTab> {
                 image: DecorationImage(image: fondo, fit: BoxFit.cover),
               ),
               child: ListView.builder(
-                itemCount: equipos.length,
+                itemCount: equipos.length + 1, // Incrementa el count por 1
                 itemBuilder: (context, index) {
+                  if (index == equipos.length) {
+                    return SizedBox(
+                        height: 80); // Espacio para el botón flotante
+                  }
                   final equipo = equipos[index];
                   final nombresJugadores =
                       obtenerNombresJugadores(equipo['id']);
@@ -221,6 +226,24 @@ class _EquiposTabState extends State<EquiposTab> {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navega a la página deseada cuando se presione el botón
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  CompesTab(), // Reemplaza con la página deseada
+            ),
+          );
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.teal,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
     );
   }

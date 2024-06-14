@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:aplicacion/services/http_service.dart';
 import 'package:intl/intl.dart';
 
-class EditCompe extends StatefulWidget {
-  final Map<String, dynamic> campeonato;
-
-  const EditCompe({Key? key, required this.campeonato}) : super(key: key);
-
+class CreateCompe extends StatefulWidget {
   @override
-  _EditCompeState createState() => _EditCompeState();
+  _CreateCompeState createState() => _CreateCompeState();
 }
 
-class _EditCompeState extends State<EditCompe> {
+class _CreateCompeState extends State<CreateCompe> {
   final HttpService httpService = HttpService();
   final _formKey = GlobalKey<FormState>();
   TextEditingController _nombreController = TextEditingController();
@@ -26,38 +22,24 @@ class _EditCompeState extends State<EditCompe> {
   @override
   void initState() {
     super.initState();
-    _nombreController.text = widget.campeonato['nombre'];
-    _fechaInicioController.text = widget.campeonato['fecha_inicio'];
-    _fechaFinController.text = widget.campeonato['fecha_fin'];
-    _reglasController.text = widget.campeonato['reglas'];
-    _premiosController.text = widget.campeonato['premios'];
     cargarEquiposDisponibles();
   }
 
   Future<void> cargarEquiposDisponibles() async {
     try {
       List<dynamic> listaEquipos = await httpService.equipos();
-      List<dynamic> listaCampeonatoEquipo =
-          await httpService.campeonatoEquipo();
-      List<int> idsEquiposEnCampeonato = listaCampeonatoEquipo
-          .where((ce) => ce['campeonato_id'] == widget.campeonato['id'])
-          .map<int>((ce) => ce['equipo_id'])
-          .toList();
-
       setState(() {
-        equiposDisponibles = listaEquipos
-            .where((equipo) => !idsEquiposEnCampeonato.contains(equipo['id']))
-            .toList();
+        equiposDisponibles = listaEquipos;
       });
     } catch (e) {
       print('Error al cargar equipos disponibles: $e');
     }
   }
 
-  Future<void> vincularEquipos() async {
+  Future<void> vincularEquipos(int campeonatoId) async {
     try {
       for (int equipoId in equiposSeleccionados) {
-        await httpService.vincularEquipo(widget.campeonato['id'], equipoId);
+        await httpService.vincularEquipo(campeonatoId, equipoId);
       }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Equipos vinculados correctamente'),
@@ -69,6 +51,29 @@ class _EditCompeState extends State<EditCompe> {
         content: Text('Error al vincular equipos'),
         duration: Duration(seconds: 2),
       ));
+    }
+  }
+
+  Future<void> crearCampeonato() async {
+    if (_formKey.currentState!.validate()) {
+      final nuevoCampeonato = {
+        'nombre': _nombreController.text,
+        'fecha_inicio': _fechaInicioController.text,
+        'fecha_fin': _fechaFinController.text,
+        'reglas': _reglasController.text,
+        'premios': _premiosController.text,
+      };
+
+      final campeonatoId = await httpService.crearCampeonato(nuevoCampeonato);
+      if (campeonatoId != null) {
+        // Vincular equipos seleccionados al campeonato creado
+        await vincularEquipos(campeonatoId);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error al crear campeonato'),
+          duration: Duration(seconds: 2),
+        ));
+      }
     }
   }
 
@@ -89,7 +94,7 @@ class _EditCompeState extends State<EditCompe> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Editar Campeonato', style: TextStyle(color: Colors.white)),
+        title: Text('Crear Campeonato', style: TextStyle(color: Colors.white)),
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.black,
       ),
@@ -187,30 +192,8 @@ class _EditCompeState extends State<EditCompe> {
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all(Colors.teal),
                   ),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      // Guardar cambios del campeonato
-                      widget.campeonato['nombre'] = _nombreController.text;
-                      widget.campeonato['fecha_inicio'] =
-                          _fechaInicioController.text;
-                      widget.campeonato['fecha_fin'] = _fechaFinController.text;
-                      widget.campeonato['reglas'] = _reglasController.text;
-                      widget.campeonato['premios'] = _premiosController.text;
-
-                      bool editado =
-                          await httpService.editarCampeonato(widget.campeonato);
-                      if (editado) {
-                        // Vincular equipos seleccionados
-                        await vincularEquipos();
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Error al editar campeonato'),
-                          duration: Duration(seconds: 2),
-                        ));
-                      }
-                    }
-                  },
-                  child: Text('Guardar cambios',
+                  onPressed: crearCampeonato,
+                  child: Text('Crear Campeonato',
                       style: TextStyle(color: Colors.white, fontSize: 18)),
                 ),
               ],

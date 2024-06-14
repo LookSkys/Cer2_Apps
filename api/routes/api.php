@@ -22,4 +22,7 @@ route::resource('/resultados', ResultadosController::class);
 route::resource('/equipo_partido', Equipo_partidoController::class);
 route::resource('/campeonato_equipo', Campeonato_equipoController::class);
 Route::post('/campeonatos/{campeonatoId}/equipos', [CampeonatosController::class, 'vincularEquipo']);
+Route::post('/campeonatos', [CampeonatosController::class, 'store']);
+Route::post('/equipos', [EquiposController::class, 'store']);
 Route::post('/jugadores', [JugadoresController::class, 'store']);
+Route::put('/campeonatos/{campeonatoId}', [CampeonatosController::class, 'update']);

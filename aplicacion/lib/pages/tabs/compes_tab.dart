@@ -1,7 +1,9 @@
+import 'package:aplicacion/pages/tabs/agregar_compe.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicacion/pages/tabs/compe_detalles.dart';
 import 'package:aplicacion/pages/tabs/edit_compe.dart'; // Importa la pantalla de edición
 import 'package:aplicacion/services/http_service.dart';
+import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CompesTab extends StatefulWidget {
@@ -109,8 +111,13 @@ class _CompesTabState extends State<CompesTab> {
                   ),
                 )
               : ListView.builder(
-                  itemCount: campeonatos.length,
+                  itemCount:
+                      campeonatos.length + 1, // Incrementa el count por 1
                   itemBuilder: (context, index) {
+                    if (index == campeonatos.length) {
+                      return SizedBox(
+                          height: 80); // Espacio para el botón flotante
+                    }
                     final campeonato = campeonatos[index];
                     final nombresEquipos =
                         obtenerNombresEquipos(campeonato['id']);
@@ -217,6 +224,24 @@ class _CompesTabState extends State<CompesTab> {
                     );
                   },
                 ),
+        ),
+        //BOTON AGREGAR
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            MdiIcons.plus,
+            color: Colors.white,
+          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          backgroundColor: Colors.teal,
+          onPressed: () {
+            MaterialPageRoute ruta = MaterialPageRoute(
+              builder: (context) => CreateCompe(),
+            );
+            Navigator.push(context, ruta).then((value) {
+              setState(() {});
+            });
+          },
         ),
       ),
     );

@@ -68,6 +68,34 @@ class HttpService {
     return response.statusCode == 200;
   }
 
+  Future<int?> crearCampeonato(Map<String, dynamic> campeonato) async {
+    final url = Uri.parse(
+        '$baseURL/campeonatos'); // Asegúrate de que el endpoint sea correcto
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(campeonato),
+      );
+
+      if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        return responseData[
+            'id']; // Asegúrate de que la respuesta contiene la ID del campeonato creado
+      } else {
+        // Error al crear campeonato
+        print('Error al crear campeonato: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('Error al realizar solicitud: $e');
+      return null;
+    }
+  }
+
   Future<bool> vincularEquipo(int campeonatoId, int equipoId) async {
     final response = await http.post(
       Uri.parse('$baseURL/campeonatos/$campeonatoId/equipos'),
@@ -105,6 +133,29 @@ class HttpService {
       }),
     );
     return response.statusCode == 200;
+  }
+
+  Future<bool> crearEquipo(Map<String, dynamic> equipo) async {
+    final url = Uri.parse('$baseURL/equipos');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(equipo),
+      );
+
+      if (response.statusCode == 201) {
+        return true; // Creación exitosa
+      } else {
+        print('Error al crear equipo: ${response.statusCode}');
+        print('Cuerpo de la respuesta: ${response.body}');
+        return false; // Error en la creación
+      }
+    } catch (e) {
+      print('Excepción al crear equipo: $e');
+      return false; // Error en la creación
+    }
   }
 
   Future<bool> agregarJugador(Map<String, dynamic> jugador) async {
