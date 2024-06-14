@@ -113,7 +113,7 @@ class _EditarJugadoresEquipoState extends State<EditarJugadores> {
                 ElevatedButton(
                   onPressed: agregarJugador,
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.teal),
+                    backgroundColor: WidgetStateProperty.all(Colors.teal),
                   ),
                   child: Text(
                     'Agregar Jugador',

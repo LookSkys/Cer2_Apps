@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\EquipoPartido;
 use Illuminate\Http\Request;
+use App\Models\Partido;
+use App\Models\Equipo;
 
 class Equipo_partidoController
 {
@@ -29,7 +31,12 @@ class Equipo_partidoController
      */
     public function store(Request $request)
     {
-        //
+        $equipoPartido = new EquipoPartido();
+        $equipoPartido->equipo_id = $request->equipo_id;
+        $equipoPartido->partido_id = $request->partido_id;
+        $equipoPartido->es_ganador = 0;
+        $equipoPartido->save();
+        return $equipoPartido;
     }
 
     /**
@@ -61,6 +68,33 @@ class Equipo_partidoController
      */
     public function destroy(EquipoPartido $equipoPartido)
     {
-        //
+        return $equipoPartido->delete();
+    }
+    public function vincularEquipos(Request $request)
+    {
+        $partidoId = $request->input('partido_id');
+        $equipoIds = $request->input('equipo_ids');
+
+        try {
+            $partido = Partido::findOrFail($partidoId);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Partido no encontrado'], 404);
+        }
+
+        foreach ($equipoIds as $equipoId) {
+            try {
+                $equipo = Equipo::findOrFail($equipoId);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Equipo no encontrado'], 404);
+            }
+
+            $equipoPartido = new EquipoPartido();
+            $equipoPartido->partido_id = $partido->id;
+            $equipoPartido->equipo_id = $equipo->id;
+            $equipoPartido->es_ganador = 0;
+            $equipoPartido->save();
+        }
+
+        return response()->json(['message' => 'Equipos vinculados correctamente'], 200);
     }
 }

@@ -25,4 +25,7 @@ Route::post('/campeonatos/{campeonatoId}/equipos', [CampeonatosController::class
 Route::post('/campeonatos', [CampeonatosController::class, 'store']);
 Route::post('/equipos', [EquiposController::class, 'store']);
 Route::post('/jugadores', [JugadoresController::class, 'store']);
+Route::post('/partidos', [PartidosController::class, 'store']);
+Route::post('/equipo-partido/vincular', [Equipo_partidoController::class, 'vincularEquipos']);
 Route::put('/campeonatos/{campeonatoId}', [CampeonatosController::class, 'update']);
+

@@ -176,4 +176,53 @@ class HttpService {
     );
     return response.statusCode == 201; // 201 indica que se creó exitosamente
   }
+
+  Future<int?> crearPartidos(Map<String, dynamic> partido) async {
+    var url = Uri.parse('$baseURL/partidos');
+    try {
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(partido),
+      );
+
+      if (response.statusCode == 201) {
+        var jsonResponse = jsonDecode(response.body);
+        return jsonResponse['id']; // Devuelve el ID del partido creado
+      } else {
+        print('Error al crear partido: ${response.statusCode}');
+        print('Cuerpo de la respuesta: ${response.body}');
+        return null; // Error en la creación
+      }
+    } catch (e) {
+      print('Excepción al crear partido: $e');
+      return null; // Error en la creación
+    }
+  }
+
+  Future<bool> vincularEquiposAlPartido(
+      int partidoId, List<int> equipoIds) async {
+    var url = Uri.parse('$baseURL/equipo-partido/vincular');
+    try {
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'partido_id': partidoId,
+          'equipo_ids': equipoIds,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Vinculación exitosa
+      } else {
+        print('Error al vincular equipos al partido: ${response.statusCode}');
+        print('Cuerpo de la respuesta: ${response.body}');
+        return false; // Error en la vinculación
+      }
+    } catch (e) {
+      print('Excepción al vincular equipos al partido: $e');
+      return false; // Error en la vinculación
+    }
+  }
 }

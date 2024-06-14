@@ -1,4 +1,4 @@
-import 'package:aplicacion/pages/tabs/compes_tab.dart';
+import 'package:aplicacion/pages/tabs/agregar_equipos.dart';
 import 'package:aplicacion/pages/tabs/editar_equipo.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicacion/pages/tabs/equipo_detalles.dart';
@@ -145,9 +145,13 @@ class _EquiposTabState extends State<EquiposTab> {
                             AssetImage('assets/images/equipo_icono.png'),
                         backgroundColor: Colors.black,
                       ),
-                      title: Text(
-                        '💠 ${equipo['nombre']}',
-                        style: estiloSeccion,
+                      title: Column(
+                        children: [
+                          Text(
+                            '💠 ${equipo['nombre']}',
+                            style: estiloSeccion,
+                          ),
+                        ],
                       ),
                       subtitle: Text(
                         'Entrenador: ${equipo['entrenador']}',
@@ -234,7 +238,7 @@ class _EquiposTabState extends State<EquiposTab> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  CompesTab(), // Reemplaza con la página deseada
+                  CrearEquipo(), // Reemplaza con la página deseada
             ),
           );
         },

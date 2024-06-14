@@ -53,50 +53,58 @@ class EquipoDetalles extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${equipo['nombre']}', style: estiloNombre),
+                Container(
+                    alignment: Alignment.center,
+                    child: Text('${equipo['nombre']}', style: estiloNombre)),
+                SizedBox(height: 30),
+                Text(
+                  '🧔 Entrenador:',
+                  style: estiloSeccion,
+                ),
                 SizedBox(height: 10),
-                Text('🧔 Entrenador: ${equipo['entrenador']}',
-                    style: estiloDato),
-                SizedBox(height: 20),
-                Text('Jugadores:', style: estiloSeccion),
+                Text('• ${equipo['entrenador']}', style: estiloDato),
+                SizedBox(height: 30),
+                Text('👤 Jugadores:', style: estiloSeccion),
+                SizedBox(height: 10),
                 ...jugadores
                     .map((nombre) => Text(
-                          '😼 $nombre',
+                          '• $nombre',
                           style: estiloDato,
                         ))
                     .toList(),
                 if (jugadores.isEmpty)
                   Text('No hay jugadores registrados en este equipo.',
                       style: estiloDato),
-                SizedBox(height: 20),
-                Text('Juegos en donde participa:', style: estiloSeccion),
+                SizedBox(height: 30),
+                Text('🎮 Juegos en donde participa:', style: estiloSeccion),
+                SizedBox(height: 10),
                 ...juegosParticipa
-                    .map((juego) => Text(
-                          '🎮 $juego',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ))
+                    .map((juego) => Text('• $juego', style: estiloDato))
                     .toList(),
                 if (juegosParticipa.isEmpty)
                   Text('Este equipo no participa en ningún juego.',
                       style: estiloDato),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditarJugadores(
-                          equipoId: (equipo['id']),
+                SizedBox(height: 60),
+                Container(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditarJugadores(
+                            equipoId: (equipo['id']),
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(Colors.teal),
-                  ),
-                  child: Text(
-                    'Agregar Jugador',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                      );
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.teal),
+                    ),
+                    child: Text(
+                      'Agregar Jugador',
+                      style: estiloSeccion,
+                    ),
                   ),
                 ),
               ],

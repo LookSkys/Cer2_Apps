@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Partido;
 use Illuminate\Http\Request;
+use App\Models\Equipo;
+use App\Models\EquipoPartido;
 
 class PartidosController
 {
@@ -29,7 +31,13 @@ class PartidosController
      */
     public function store(Request $request)
     {
-        //
+        $partido = new Partido();
+        $partido->fecha = $request->fecha;
+        $partido->jugado = 0;
+        $partido->lugar = $request->lugar;
+        $partido->campeonato_id = $request->campeonato_id;
+        $partido->save();
+        return response()->json($partido, 201);
     }
 
     /**
@@ -53,7 +61,7 @@ class PartidosController
      */
     public function update(Request $request, Partido $partido)
     {
-        //
+        $partido->update($request->all());
     }
 
     /**

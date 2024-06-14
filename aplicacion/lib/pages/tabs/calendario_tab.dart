@@ -1,6 +1,8 @@
+import 'package:aplicacion/pages/tabs/agregar_partidos.dart';
 import 'package:flutter/material.dart';
 import 'package:aplicacion/pages/tabs/partido_detalles.dart';
 import 'package:aplicacion/services/http_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CalendarioTab extends StatefulWidget {
   const CalendarioTab({Key? key}) : super(key: key);
@@ -55,6 +57,13 @@ class _CalendarioTabState extends State<CalendarioTab> {
 
   @override
   Widget build(BuildContext context) {
+    //Estilos para texto
+    TextStyle estilo_seccion = GoogleFonts.oswald(
+        textStyle: TextStyle(
+            fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white));
+    TextStyle estilo_dato = GoogleFonts.oswald(
+        textStyle: TextStyle(fontSize: 17, color: Colors.white));
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -65,10 +74,12 @@ class _CalendarioTabState extends State<CalendarioTab> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                  child: CircularProgressIndicator(color: Colors.red));
+                child: CircularProgressIndicator(color: Colors.red),
+              );
             } else if (snapshot.hasError) {
               return Center(
-                  child: Text('Error al cargar datos: ${snapshot.error}'));
+                child: Text('Error al cargar datos: ${snapshot.error}'),
+              );
             } else {
               return ListView.builder(
                 itemCount: partidos.length,
@@ -76,7 +87,8 @@ class _CalendarioTabState extends State<CalendarioTab> {
                   final partido = partidos[index];
                   final nombresEquipos = obtenerNombresEquipos(partido['id']);
 
-                  if (nombresEquipos.isNotEmpty) {
+                  // Verificar si el partido tiene al menos dos equipos asignados
+                  if (nombresEquipos.length >= 2) {
                     return Container(
                       margin:
                           EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -89,37 +101,84 @@ class _CalendarioTabState extends State<CalendarioTab> {
                           width: 2.0,
                         ),
                       ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/partido_icono.png'),
-                          backgroundColor: Colors.black,
-                        ),
-                        title: Text(
-                          '💠 ${partido['fecha']}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Lugar: ${partido['lugar']}',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PartidoDetalles(
-                                partido: partido,
-                                nombresEquipos: nombresEquipos,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage:
+                                  AssetImage('assets/images/partido_icono.png'),
+                              backgroundColor: Colors.black,
+                            ),
+                            title: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        nombresEquipos[0],
+                                        style: estilo_seccion,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Image.asset(
+                                      'assets/images/versus_icono.png', // Ruta de la imagen
+                                      width: 50, // Ancho de la imagen
+                                      height: 50, // Alto de la imagen
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        nombresEquipos[1],
+                                        style: estilo_seccion,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Fecha: ${partido['fecha']}',
+                                style: estilo_dato,
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                          );
-                        },
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PartidoDetalles(
+                                    partido: partido,
+                                    nombresEquipos: nombresEquipos,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () {
+                                  // Acción para editar el partido
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  // Acción para eliminar el partido
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     );
                   } else {
+                    // Si no hay suficientes equipos, o el partido no tiene equipos asignados, se muestra un SizedBox.shrink()
                     return SizedBox.shrink();
                   }
                 },
@@ -127,6 +186,24 @@ class _CalendarioTabState extends State<CalendarioTab> {
             }
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navega a la página deseada cuando se presione el botón
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  CrearPartido(), // Reemplaza con la página deseada
+            ),
+          );
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.teal,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
     );
   }

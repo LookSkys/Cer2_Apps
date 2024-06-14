@@ -98,7 +98,9 @@ class _ResultadosTabState extends State<ResultadosTab> {
         color: Colors.white,
       ),
     );
-
+    TextStyle estilo_dato = GoogleFonts.oswald(
+      textStyle: TextStyle(fontSize: 17, color: Colors.white),
+    );
     return Scaffold(
       body: FutureBuilder<void>(
         future: _cargarResultadosFuture,
@@ -147,12 +149,12 @@ class _ResultadosTabState extends State<ResultadosTab> {
                         backgroundColor: Colors.black,
                       ),
                       title: Text(
-                        '🏆 Competencia: $nombreCampeonato',
+                        '💠 Competencia: $nombreCampeonato',
                         style: estilo_seccion,
                       ),
                       subtitle: Text(
-                        '✔️ Ganador: $nombreGanador\n❌ Perdedor: $nombrePerdedor',
-                        style: estilo_seccion,
+                        '🏆 Ganador: $nombreGanador\n❌ Perdedor: $nombrePerdedor',
+                        style: estilo_dato,
                       ),
                       onTap: () {
                         // Acciones al hacer tap en un resultado si es necesario

@@ -51,29 +51,47 @@ class CompeDetalles extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${campeonato['nombre']}', style: estilo_nombre),
-                SizedBox(height: 15),
+                Container(
+                    alignment: Alignment.center,
+                    child:
+                        Text('${campeonato['nombre']}', style: estilo_nombre)),
+                SizedBox(height: 30),
                 Text(
-                  '📅 Fecha de Inicio: ${campeonato['fecha_inicio']}',
+                  '📅 Fechas:',
+                  style: estilo_seccion,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '• Inicio: ${campeonato['fecha_inicio']}',
                   style: estilo_dato,
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '📅 Fecha de Fin: ${campeonato['fecha_fin']}',
+                  '• Fin: ${campeonato['fecha_fin']}',
                   style: estilo_dato,
+                ),
+                SizedBox(height: 30),
+                Text(
+                  '📄 Reglas:',
+                  style: estilo_seccion,
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '📄 Reglas: ${campeonato['reglas']}',
+                  '• ${campeonato['reglas']}',
                   style: estilo_dato,
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 Text(
-                  '🏆 Premios: ${campeonato['premios']}',
+                  '🏆 Premios: ',
+                  style: estilo_seccion,
+                ),
+                Text(
+                  '• ${campeonato['premios']}',
                   style: estilo_dato,
                 ),
-                SizedBox(height: 20),
-                Text('Equipos Participantes:', style: estilo_seccion),
+                SizedBox(height: 30),
+                Text('👥 Participantes:', style: estilo_seccion),
+                SizedBox(height: 10),
                 ...nombresEquipos
                     .map((nombre) => Text(
                           '😼 $nombre',
