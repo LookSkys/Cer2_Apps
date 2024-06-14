@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('partidos', function (Blueprint $table) {
             $table->id();
             $table->date('fecha');
+            $table->time('hora');
             $table->boolean('jugado')->default(false);
             $table->string('lugar', 50)->nullable(false);
             $table->unsignedBigInteger('campeonato_id')->nullable(false);

@@ -1,8 +1,9 @@
-import 'package:aplicacion/pages/tabs/agregar_partidos.dart';
 import 'package:flutter/material.dart';
+import 'package:aplicacion/pages/tabs/agregar_partidos.dart';
 import 'package:aplicacion/pages/tabs/partido_detalles.dart';
 import 'package:aplicacion/services/http_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart'; // Importa el paquete para formatear fechas y horas
 
 class CalendarioTab extends StatefulWidget {
   const CalendarioTab({Key? key}) : super(key: key);
@@ -31,6 +32,7 @@ class _CalendarioTabState extends State<CalendarioTab> {
       List<dynamic> listaPartidos = await httpService.partidos();
       List<dynamic> listaEquipos = await httpService.equipos();
       List<dynamic> listaEquipoPartido = await httpService.equipoPartido();
+
       setState(() {
         partidos = listaPartidos;
         equipos = listaEquipos;
@@ -55,14 +57,50 @@ class _CalendarioTabState extends State<CalendarioTab> {
     return nombresEquipos;
   }
 
+  Future<void> eliminarPartido(int partidoId) async {
+    try {
+      bool eliminado = await httpService.eliminarPartidos(partidoId);
+      if (eliminado) {
+        // Actualizar lista después de eliminar
+        await cargarPartidos();
+        // Mostrar un mensaje de éxito
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Campeonato eliminado correctamente'),
+          duration: Duration(seconds: 2),
+        ));
+      } else {
+        // Mostrar mensaje de error
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error al eliminar campeonato'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+    } catch (e) {
+      // Mostrar mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error al eliminar campeonato'),
+        duration: Duration(seconds: 2),
+      ));
+    }
+  }
+
+  TimeOfDay _parseHora(String horaString) {
+    final partes = horaString.split(":");
+    final hora = int.parse(partes[0]);
+    final minutos = int.parse(partes[1]);
+    return TimeOfDay(hour: hora, minute: minutos);
+  }
+
   @override
   Widget build(BuildContext context) {
-    //Estilos para texto
-    TextStyle estilo_seccion = GoogleFonts.oswald(
-        textStyle: TextStyle(
-            fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white));
-    TextStyle estilo_dato = GoogleFonts.oswald(
-        textStyle: TextStyle(fontSize: 17, color: Colors.white));
+    // Estilos para texto
+    TextStyle estiloSeccion = GoogleFonts.oswald(
+      textStyle: TextStyle(
+          fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white),
+    );
+    TextStyle estiloDato = GoogleFonts.oswald(
+      textStyle: TextStyle(fontSize: 17, color: Colors.white),
+    );
 
     return Scaffold(
       body: Container(
@@ -89,6 +127,11 @@ class _CalendarioTabState extends State<CalendarioTab> {
 
                   // Verificar si el partido tiene al menos dos equipos asignados
                   if (nombresEquipos.length >= 2) {
+                    // Convertir fecha de String a DateTime
+                    DateTime fecha = DateTime.parse(partido['fecha']);
+                    // Convertir hora de String a TimeOfDay
+                    TimeOfDay hora = _parseHora(partido['hora']);
+
                     return Container(
                       margin:
                           EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -102,8 +145,25 @@ class _CalendarioTabState extends State<CalendarioTab> {
                         ),
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          // Hora y fecha del partido
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Hora: ${hora.format(context)}', // Formatea la hora en HH:mm
+                                  style: estiloDato,
+                                ),
+                                Spacer(),
+                                Text(
+                                  'Fecha: ${DateFormat('dd/MM/yyyy').format(fecha)}', // Formatea la fecha en dd/MM/yyyy
+                                  style: estiloDato,
+                                ),
+                              ],
+                            ),
+                          ),
                           ListTile(
                             leading: CircleAvatar(
                               backgroundImage:
@@ -117,7 +177,7 @@ class _CalendarioTabState extends State<CalendarioTab> {
                                     Expanded(
                                       child: Text(
                                         nombresEquipos[0],
-                                        style: estilo_seccion,
+                                        style: estiloSeccion,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -129,21 +189,13 @@ class _CalendarioTabState extends State<CalendarioTab> {
                                     Expanded(
                                       child: Text(
                                         nombresEquipos[1],
-                                        style: estilo_seccion,
+                                        style: estiloSeccion,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ],
                                 ),
                               ],
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                'Fecha: ${partido['fecha']}',
-                                style: estilo_dato,
-                                textAlign: TextAlign.center,
-                              ),
                             ),
                             onTap: () {
                               Navigator.push(
@@ -161,15 +213,33 @@ class _CalendarioTabState extends State<CalendarioTab> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               IconButton(
-                                icon: Icon(Icons.edit, color: Colors.blue),
-                                onPressed: () {
-                                  // Acción para editar el partido
-                                },
-                              ),
-                              IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
-                                  // Acción para eliminar el partido
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Confirmación'),
+                                        content: Text(
+                                            '¿Estás seguro de querer eliminar este campeonato?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text('Cancelar'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text('Aceptar'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              eliminarPartido(partido['id']);
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 },
                               ),
                             ],

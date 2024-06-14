@@ -61,7 +61,7 @@ class PartidosController
      */
     public function update(Request $request, Partido $partido)
     {
-        $partido->update($request->all());
+        //
     }
 
     /**
@@ -69,6 +69,6 @@ class PartidosController
      */
     public function destroy(Partido $partido)
     {
-        //
+        return $partido->delete();
     }
 }

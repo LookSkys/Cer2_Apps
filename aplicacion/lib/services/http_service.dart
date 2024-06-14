@@ -225,4 +225,10 @@ class HttpService {
       return false; // Error en la vinculación
     }
   }
+
+  Future<bool> eliminarPartidos(int partidoId) async {
+    var url = Uri.parse(baseURL + '/partidos/' + partidoId.toString());
+    var response = await http.delete(url);
+    return response.statusCode == 200;
+  }
 }

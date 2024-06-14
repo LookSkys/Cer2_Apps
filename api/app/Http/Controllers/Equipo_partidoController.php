@@ -58,10 +58,12 @@ class Equipo_partidoController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, EquipoPartido $equipoPartido)
+
+    public function update(Request $request)
     {
         //
     }
+
 
     /**
      * Remove the specified resource from storage.
