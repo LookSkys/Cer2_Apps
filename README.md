@@ -1,3 +1,3 @@
 Integrantes: Enrique Sanhueza, Raúl Cabrera
 Profesor: Carlos Alten
-Asignatura: Aplicaicones Moviles
+Asignatura: Desarrollo de Aplicaciones Moviles, Certamen 2
