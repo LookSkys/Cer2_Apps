@@ -14,7 +14,7 @@ class CompesTab extends StatefulWidget {
 }
 
 class _CompesTabState extends State<CompesTab> {
-  final AssetImage fondo = AssetImage('assets/images/fondo_equipo.jpg');
+  final AssetImage fondo = AssetImage('assets/images/fondo_compes.jpg');
   final HttpService httpService = HttpService();
   List<dynamic> campeonatos = [];
   List<dynamic> equipos = [];

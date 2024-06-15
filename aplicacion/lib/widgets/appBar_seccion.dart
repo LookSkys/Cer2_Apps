@@ -11,7 +11,7 @@ class AppbarSeccion extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(
         this.nombre_appbar,
-        style: GoogleFonts.oswald(textStyle:TextStyle(color: Colors.white)),
+        style: GoogleFonts.oswald(textStyle:TextStyle(color: Colors.white, fontSize: 25)),
       ),
       backgroundColor: Colors.black,
       iconTheme: IconThemeData(color: Colors.white),

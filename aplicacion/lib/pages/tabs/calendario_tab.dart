@@ -13,7 +13,7 @@ class CalendarioTab extends StatefulWidget {
 }
 
 class _CalendarioTabState extends State<CalendarioTab> {
-  final AssetImage fondo = AssetImage('assets/images/fondo_equipo.jpg');
+  final AssetImage fondo = AssetImage('assets/images/fondo_calendario.jpg');
   final HttpService httpService = HttpService();
   List<dynamic> partidos = [];
   List<dynamic> equipos = [];
@@ -99,7 +99,7 @@ class _CalendarioTabState extends State<CalendarioTab> {
           fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white),
     );
     TextStyle estiloDato = GoogleFonts.oswald(
-      textStyle: TextStyle(fontSize: 17, color: Colors.white),
+      textStyle: TextStyle(fontSize: 19, color: Colors.white),
     );
 
     return Scaffold(
@@ -112,7 +112,7 @@ class _CalendarioTabState extends State<CalendarioTab> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: CircularProgressIndicator(color: Colors.red),
+                child: CircularProgressIndicator(color: Colors.teal),
               );
             } else if (snapshot.hasError) {
               return Center(
@@ -120,8 +120,12 @@ class _CalendarioTabState extends State<CalendarioTab> {
               );
             } else {
               return ListView.builder(
-                itemCount: partidos.length,
+                itemCount: equipos.length + 1, // Incrementa el count por 1
                 itemBuilder: (context, index) {
+                  if (index == equipos.length) {
+                    return SizedBox(
+                        height: 80); // Espacio para el botón flotante
+                  }
                   final partido = partidos[index];
                   final nombresEquipos = obtenerNombresEquipos(partido['id']);
 
@@ -163,6 +167,10 @@ class _CalendarioTabState extends State<CalendarioTab> {
                                 ),
                               ],
                             ),
+                          ),
+                          Divider(
+                            color: Colors.teal,
+                            thickness: 2,
                           ),
                           ListTile(
                             leading: CircleAvatar(
@@ -209,40 +217,42 @@ class _CalendarioTabState extends State<CalendarioTab> {
                               );
                             },
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text('Confirmación'),
-                                        content: Text(
-                                            '¿Estás seguro de querer eliminar este campeonato?'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: Text('Cancelar'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: Text('Aceptar'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              eliminarPartido(partido['id']);
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 170 ),
+                            child: Row(
+                              children: <Widget>[
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('Confirmación'),
+                                          content: Text(
+                                              '¿Estás seguro de querer eliminar este campeonato?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text('Cancelar'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text('Aceptar'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                eliminarPartido(partido['id']);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

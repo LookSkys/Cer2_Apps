@@ -11,7 +11,7 @@ class ResultadosTab extends StatefulWidget {
 }
 
 class _ResultadosTabState extends State<ResultadosTab> {
-  final AssetImage fondo = AssetImage('assets/images/fondo_equipo.jpg');
+  final AssetImage fondo = AssetImage('assets/images/fondo_resultados.jpg');
   final HttpService httpService = HttpService();
   List<dynamic> resultados = [];
   List<dynamic> equipos = [];
