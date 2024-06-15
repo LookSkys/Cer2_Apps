@@ -33,6 +33,7 @@ class HomeScreen extends StatelessWidget {
               //estilo de las tabs
               labelStyle: estilo_seleccionado,
               unselectedLabelStyle: estilo_deseleccionado,
+              indicatorColor: Colors.teal,
               tabs: [
                 Tab(
                   text: 'Competiciones',

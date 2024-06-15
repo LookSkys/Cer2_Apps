@@ -231,4 +231,33 @@ class HttpService {
     var response = await http.delete(url);
     return response.statusCode == 200;
   }
+
+  Future<int?> crearResultados(Map<String, dynamic> resultado) async {
+    var url = Uri.parse('$baseURL/resultados');
+    try {
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(resultado),
+      );
+
+      if (response.statusCode == 201) {
+        var jsonResponse = jsonDecode(response.body);
+        return jsonResponse['id'];
+      } else {
+        print('Error al crear resultado: ${response.statusCode}');
+        print('Cuerpo de la respuesta: ${response.body}');
+        return null; // Error en la creación
+      }
+    } catch (e) {
+      print('Excepción al crear resultado: $e');
+      return null; // Error en la creación
+    }
+  }
+
+  Future<bool> eliminarResultados(int resultadoId) async {
+    var url = Uri.parse(baseURL + '/partidos/' + resultadoId.toString());
+    var response = await http.delete(url);
+    return response.statusCode == 200;
+  }
 }

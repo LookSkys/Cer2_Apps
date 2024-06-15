@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:aplicacion/services/http_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:aplicacion/pages/tabs/agregar_resultados.dart';
 
 class ResultadosTab extends StatefulWidget {
   const ResultadosTab({Key? key}) : super(key: key);
@@ -56,8 +57,6 @@ class _ResultadosTabState extends State<ResultadosTab> {
       return 'Desconocido';
     }
 
-    print('Buscando campeonato para partido ID: $partidoId');
-
     // Buscar el partido por partidoId
     final partido = partidos.firstWhere(
       (partido) => partido['id'] == partidoId,
@@ -65,11 +64,8 @@ class _ResultadosTabState extends State<ResultadosTab> {
     );
 
     if (partido == null) {
-      print('No se encontró el partido con ID: $partidoId');
       return 'Desconocido';
     }
-
-    print('Partido encontrado: $partido');
 
     // Obtener el campeonato por id_campeonato
     final idCampeonato = partido['campeonato_id'];
@@ -79,13 +75,36 @@ class _ResultadosTabState extends State<ResultadosTab> {
     );
 
     if (campeonato == null) {
-      print('No se encontró el campeonato con ID: $idCampeonato');
       return 'Desconocido';
     }
 
-    print('Campeonato encontrado: $campeonato');
-
     return campeonato['nombre'] ?? 'Desconocido';
+  }
+
+  Future<void> eliminarResultado(int resultadoId) async {
+    try {
+      bool eliminado = await httpService.eliminarResultados(resultadoId);
+      if (eliminado) {
+        setState(() {
+          resultados.removeWhere((resultado) => resultado['id'] == resultadoId);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Resultado eliminado correctamente'),
+          duration: Duration(seconds: 2),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error al eliminar resultado'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+    } catch (e) {
+      print('Error al eliminar resultado: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error al eliminar resultado'),
+        duration: Duration(seconds: 2),
+      ));
+    }
   }
 
   @override
@@ -108,7 +127,8 @@ class _ResultadosTabState extends State<ResultadosTab> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
               decoration: BoxDecoration(
-                  image: DecorationImage(image: fondo, fit: BoxFit.cover)),
+                image: DecorationImage(image: fondo, fit: BoxFit.cover),
+              ),
               child: Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasError) {
@@ -156,6 +176,44 @@ class _ResultadosTabState extends State<ResultadosTab> {
                         '🏆 Ganador: $nombreGanador\n❌ Perdedor: $nombrePerdedor',
                         style: estilo_dato,
                       ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.black,
+                                title: Text(
+                                  'Confirmación',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                content: Text(
+                                  '¿Estás seguro de querer eliminar este resultado?',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Cancelar',
+                                        style: TextStyle(color: Colors.white)),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Aceptar',
+                                        style: TextStyle(color: Colors.white)),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      eliminarResultado(resultado['id']);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
                       onTap: () {
                         // Acciones al hacer tap en un resultado si es necesario
                       },
@@ -166,6 +224,27 @@ class _ResultadosTabState extends State<ResultadosTab> {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CrearResultado(
+                onResultadoCreado: () {
+                  // Actualiza la lista de resultados
+                  cargarResultados();
+                },
+              ),
+            ),
+          );
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.teal,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
     );
   }

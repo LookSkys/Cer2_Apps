@@ -29,7 +29,25 @@ class ResultadosController
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $resultado = new Resultado(); // Asegúrate de tener el modelo Resultado definido
+
+            // Asignar los datos del request al modelo
+            $resultado->puntuacion_ganador = $request->puntuacion_ganador;
+            $resultado->puntuacion_perdedor = $request->puntuacion_perdedor;
+            $resultado->partido_id = $request->partido_id;
+            $resultado->equipo_ganador_id = $request->equipo_ganador_id;
+            $resultado->equipo_perdedor_id = $request->equipo_perdedor_id;
+
+            // Guardar el resultado
+            $resultado->save();
+
+            // Retornar el resultado guardado
+            return response()->json($resultado, 201);
+        } catch (\Exception $e) {
+            // Capturar y manejar cualquier excepción
+            return response()->json(['error' => 'Error al crear resultado: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -61,6 +79,6 @@ class ResultadosController
      */
     public function destroy(Resultado $resultado)
     {
-        //
+        return $resultado->delete();
     }
 }

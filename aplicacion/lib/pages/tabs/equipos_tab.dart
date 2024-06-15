@@ -198,18 +198,25 @@ class _EquiposTabState extends State<EquiposTab> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('Confirmación'),
+                                    backgroundColor: Colors.black,
+                                    title: Text('Confirmación',
+                                        style: TextStyle(color: Colors.white)),
                                     content: Text(
-                                        '¿Estás seguro de querer eliminar este equipo?'),
+                                        '¿Estás seguro de querer eliminar este equipo?',
+                                        style: TextStyle(color: Colors.white)),
                                     actions: <Widget>[
                                       TextButton(
-                                        child: Text('Cancelar'),
+                                        child: Text('Cancelar',
+                                            style:
+                                                TextStyle(color: Colors.white)),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
                                       ),
                                       TextButton(
-                                        child: Text('Aceptar'),
+                                        child: Text('Aceptar',
+                                            style:
+                                                TextStyle(color: Colors.white)),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                           eliminarEquipo(equipo['id']);
