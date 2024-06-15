@@ -102,10 +102,11 @@ class _CrearResultadoState extends State<CrearResultado> {
   }
 
   Future<void> crearResultado() async {
-    // Convierte a enteros
-    int puntacionGanadorInt = int.parse(_puntacionGanadorController.text);
-    int puntacionPerdedorInt = int.parse(_puntacionPerdedorController.text);
     if (_formKey.currentState?.validate() ?? false) {
+      int puntacionGanadorInt =
+          int.tryParse(_puntacionGanadorController.text) ?? 0;
+      int puntacionPerdedorInt =
+          int.tryParse(_puntacionPerdedorController.text) ?? 0;
       try {
         final nuevoResultado = {
           'puntuacion_ganador': puntacionGanadorInt,
@@ -225,9 +226,13 @@ class _CrearResultadoState extends State<CrearResultado> {
                         decoration:
                             InputDecoration(labelText: 'Puntuación Ganador'),
                         style: TextStyle(color: Colors.white),
+                        keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor ingrese la puntuación del ganador';
+                          }
+                          if (int.tryParse(value) == null) {
+                            return 'Ingrese un número válido';
                           }
                           return null;
                         },
@@ -267,9 +272,13 @@ class _CrearResultadoState extends State<CrearResultado> {
                         decoration:
                             InputDecoration(labelText: 'Puntuación Perdedor'),
                         style: TextStyle(color: Colors.white),
+                        keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor ingrese la puntuación del perdedor';
+                          }
+                          if (int.tryParse(value) == null) {
+                            return 'Ingrese un número válido';
                           }
                           return null;
                         },
