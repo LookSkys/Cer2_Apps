@@ -4,7 +4,11 @@ import 'package:aplicacion/services/http_service.dart';
 class EditarJugadores extends StatefulWidget {
   final int equipoId;
 
-  const EditarJugadores({Key? key, required this.equipoId}) : super(key: key);
+  const EditarJugadores(
+      {Key? key,
+      required this.equipoId,
+      required void Function() actualizarJugadores})
+      : super(key: key);
 
   @override
   _EditarJugadoresEquipoState createState() => _EditarJugadoresEquipoState();
@@ -37,6 +41,8 @@ class _EditarJugadoresEquipoState extends State<EditarJugadores> {
           _rutController.clear();
           _nombreController.clear();
           _apellidoController.clear();
+          // Cerrar la pantalla actual para actualizar la anterior
+          Navigator.pop(context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Error al agregar jugador'),

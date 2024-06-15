@@ -1,9 +1,9 @@
-import 'package:aplicacion/pages/tabs/editar_jugadores.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:aplicacion/pages/tabs/editar_jugadores.dart';
 import 'package:aplicacion/widgets/appBar_seccion.dart';
 
-class EquipoDetalles extends StatelessWidget {
+class EquipoDetalles extends StatefulWidget {
   final dynamic equipo;
   final List<String> jugadores;
 
@@ -11,10 +11,14 @@ class EquipoDetalles extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    List<String> juegosParticipa =
-        List<String>.from(equipo['juegos_en_donde_participa']);
+  _EquipoDetallesState createState() => _EquipoDetallesState();
+}
 
+class _EquipoDetallesState extends State<EquipoDetalles> {
+  List<String> juegosParticipa = [];
+
+  @override
+  Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     // Estilos para texto
@@ -26,6 +30,15 @@ class EquipoDetalles extends StatelessWidget {
             fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white));
     TextStyle estiloDato = GoogleFonts.oswald(
         textStyle: TextStyle(fontSize: 17, color: Colors.white));
+
+    void actualizarJugadores() {
+      setState(() {
+        // Actualizar la lista de jugadores llamando a la API o a otra función que obtenga los datos actualizados
+        // En este ejemplo, simplemente reasignamos jugadores con una lista vacía
+        // Puedes reemplazar esto con la lógica adecuada para obtener los jugadores actualizados
+        widget.jugadores.add('Nuevo Jugador'); // Solo para propósitos de prueba
+      });
+    }
 
     return Scaffold(
       appBar: AppbarSeccion(nombre_appbar: 'Detalle Equipo 👥'),
@@ -55,24 +68,25 @@ class EquipoDetalles extends StatelessWidget {
               children: [
                 Container(
                     alignment: Alignment.center,
-                    child: Text('${equipo['nombre']}', style: estiloNombre)),
+                    child: Text('${widget.equipo['nombre']}',
+                        style: estiloNombre)),
                 SizedBox(height: 30),
                 Text(
                   '🧔 Entrenador:',
                   style: estiloSeccion,
                 ),
                 SizedBox(height: 10),
-                Text('• ${equipo['entrenador']}', style: estiloDato),
+                Text('• ${widget.equipo['entrenador']}', style: estiloDato),
                 SizedBox(height: 30),
                 Text('👤 Jugadores:', style: estiloSeccion),
                 SizedBox(height: 10),
-                ...jugadores
+                ...widget.jugadores
                     .map((nombre) => Text(
                           '• $nombre',
                           style: estiloDato,
                         ))
                     .toList(),
-                if (jugadores.isEmpty)
+                if (widget.jugadores.isEmpty)
                   Text('No hay jugadores registrados en este equipo.',
                       style: estiloDato),
                 SizedBox(height: 30),
@@ -93,7 +107,8 @@ class EquipoDetalles extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => EditarJugadores(
-                            equipoId: (equipo['id']),
+                            equipoId: widget.equipo['id'],
+                            actualizarJugadores: actualizarJugadores,
                           ),
                         ),
                       );

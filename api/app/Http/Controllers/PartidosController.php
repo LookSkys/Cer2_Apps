@@ -33,6 +33,7 @@ class PartidosController
     {
         $partido = new Partido();
         $partido->fecha = $request->fecha;
+        $partido->hora = $request->hora;
         $partido->jugado = 0;
         $partido->lugar = $request->lugar;
         $partido->campeonato_id = $request->campeonato_id;

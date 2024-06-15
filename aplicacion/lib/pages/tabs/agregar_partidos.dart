@@ -13,6 +13,7 @@ class _CrearPartidoState extends State<CrearPartido> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _fechaController = TextEditingController();
   TextEditingController _lugarController = TextEditingController();
+  TextEditingController _horaController = TextEditingController();
   String? _campeonatoSeleccionado;
   List<String?> _equiposSeleccionados = [null, null];
 
@@ -59,9 +60,12 @@ class _CrearPartidoState extends State<CrearPartido> {
       try {
         final nuevoPartido = {
           'fecha': _fechaController.text,
+          'hora': _horaController.text,
           'lugar': _lugarController.text,
           'campeonato_id': _campeonatoSeleccionado,
         };
+
+        print(nuevoPartido);
 
         int? partidoId = await httpService.crearPartidos(nuevoPartido);
         if (partidoId != null) {
@@ -134,6 +138,18 @@ class _CrearPartidoState extends State<CrearPartido> {
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
+                  controller: _horaController,
+                  decoration: InputDecoration(labelText: 'Hora del partido'),
+                  style: TextStyle(color: Colors.white),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese la hora del partido';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 16.0),
+                TextFormField(
                   controller: _lugarController,
                   decoration: InputDecoration(labelText: 'Lugar del partido'),
                   style: TextStyle(color: Colors.white),
@@ -146,6 +162,7 @@ class _CrearPartidoState extends State<CrearPartido> {
                 ),
                 SizedBox(height: 16.0),
                 DropdownButtonFormField<String>(
+                  dropdownColor: Colors.black,
                   value: _campeonatoSeleccionado,
                   decoration: InputDecoration(labelText: 'Campeonato'),
                   style: TextStyle(color: Colors.white),
@@ -154,7 +171,7 @@ class _CrearPartidoState extends State<CrearPartido> {
                             value: campeonato['id'].toString(),
                             child: Text(
                               campeonato['nombre'],
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(color: Colors.white),
                             ),
                           ))
                       .toList(),
@@ -172,6 +189,7 @@ class _CrearPartidoState extends State<CrearPartido> {
                 ),
                 SizedBox(height: 16.0),
                 DropdownButtonFormField<String>(
+                  dropdownColor: Colors.black,
                   value: _equiposSeleccionados[0],
                   decoration: InputDecoration(labelText: 'Equipo 1'),
                   style: TextStyle(color: Colors.white),
@@ -180,7 +198,7 @@ class _CrearPartidoState extends State<CrearPartido> {
                             value: equipo['id'].toString(),
                             child: Text(
                               equipo['nombre'],
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(color: Colors.white),
                             ),
                           ))
                       .toList(),
@@ -198,6 +216,7 @@ class _CrearPartidoState extends State<CrearPartido> {
                 ),
                 SizedBox(height: 16.0),
                 DropdownButtonFormField<String>(
+                  dropdownColor: Colors.black,
                   value: _equiposSeleccionados[1],
                   decoration: InputDecoration(labelText: 'Equipo 2'),
                   style: TextStyle(color: Colors.white),
@@ -206,7 +225,7 @@ class _CrearPartidoState extends State<CrearPartido> {
                             value: equipo['id'].toString(),
                             child: Text(
                               equipo['nombre'],
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(color: Colors.white),
                             ),
                           ))
                       .toList(),
