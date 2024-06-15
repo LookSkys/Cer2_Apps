@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=https://univdatos.com/wp-content/uploads/2022/02/Esports.png alt=EASports width="200">
+  <img src=https://univdatos.com/wp-content/uploads/2022/02/Esports.png alt=EASports width="1000">
 </p>
 
 <p align="center">
